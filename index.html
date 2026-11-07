@@ -56,8 +56,8 @@
         </div>
       </div>
       <div class="welcome-stats">
-        <div class="welcome-stat"><span>DATA SOURCE</span><strong>ILOSTAT</strong><small>International Labour Organization</small><div class="mini-bars mini-bars-red"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
-        <div class="welcome-stat"><span>STUDY PERIOD</span><strong>2013–2025</strong><small>Historical employment data</small><div class="mini-bars mini-bars-green"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
+        <div class="welcome-stat"><span>DATA SOURCE</span><strong>ILOSTAT</strong><small>International Labour Organization</small></div>
+        <div class="welcome-stat"><span>STUDY PERIOD</span><strong>2013–2025</strong><small>Historical employment data</small></div>
       </div>
     </section>
 
@@ -103,7 +103,7 @@
       </div>
     </section>
 
-    <section class="tab-panel" id="panel-ranking">
+    <section class="tab-panel" id="panel-ranking" hidden>
       <div class="section-heading"><div><div class="section-kicker">01 / RANKING</div><h2>Career Ranking</h2><p>สำรวจ 10 กลุ่มอาชีพที่มีสัดส่วนผู้มีงานทำสูงสุดในประเทศและปีที่เลือก</p></div><span class="section-number">01</span></div>
       <div class="control-bar">
         <label>ประเทศ<select id="ranking-country" aria-label="เลือกประเทศ"></select></label>
@@ -114,14 +114,14 @@
       <div class="insight-note"><b>อ่านกราฟอย่างไร?</b> แท่งที่ยาวกว่าแสดงว่าสัดส่วนกลุ่มอาชีพนั้นต่อผู้มีงานทำทั้งประเทศสูงกว่า ไม่ได้หมายความว่าเป็นอาชีพที่ดีที่สุดหรือมีรายได้สูงที่สุด</div>
     </section>
 
-    <section class="tab-panel" id="panel-fingerprint">
+    <section class="tab-panel" id="panel-fingerprint" hidden>
       <div class="section-heading"><div><div class="section-kicker">02 / COUNTRY COMPARISON</div><h2>Country Fingerprint</h2><p>เปรียบเทียบค่าเฉลี่ยสัดส่วนของกลุ่มอาชีพใน 4 ประเทศตลอดช่วงปีที่มีข้อมูลร่วมกัน</p></div><span class="section-number">02</span></div>
       <div class="legend-intro"><span class="gradient-key"></span><span>สีอ่อน = สัดส่วนต่ำ</span><span>สีเข้ม = สัดส่วนสูง</span><span class="legend-spacer"></span><span>ค่าเฉลี่ยปี 2013–2023</span></div>
       <div class="chart-card"><div class="chart-topline"><span class="chart-label">OCCUPATION STRUCTURE HEATMAP</span><span class="chart-context">เรียงตามสัดส่วนเฉลี่ยของประเทศไทย</span></div><div id="fingerprint-chart" class="chart-area chart-heatmap"></div></div>
       <div class="insight-note"><b>ข้อควรระวัง:</b> สีแสดงค่าเฉลี่ยสัดส่วนรายปี ไม่ใช่จำนวนแรงงานสะสม และไม่ได้หมายถึงจำนวนบุคคลที่ไม่ซ้ำกัน</div>
     </section>
 
-    <section class="tab-panel" id="panel-evolution">
+    <section class="tab-panel" id="panel-evolution" hidden>
       <div class="section-heading"><div><div class="section-kicker">03 / TIME SERIES</div><h2>Career Evolution</h2><p>ติดตามสัดส่วนอาชีพตามเวลา พร้อมเส้นแนวโน้มและการต่อแนวโน้มไปอีก 3 ปี</p></div><span class="section-number">03</span></div>
       <div class="control-bar"><label class="wide-label">กลุ่มอาชีพ<select id="evolution-occupation" aria-label="เลือกกลุ่มอาชีพ"></select></label><span class="control-hint">เลือกอาชีพเพื่อเปรียบเทียบ 4 ประเทศ</span></div>
       <div class="legend-pills"><span><i class="line-key solid"></i>ข้อมูลจริง</span><span><i class="line-key dashed"></i>แนวโน้มเชิงเส้น</span><span><i class="line-key dotted"></i>คาดการณ์ 3 ปี</span><span class="legend-spacer"></span><span>สีแทนประเทศ</span></div>
@@ -129,7 +129,7 @@
       <div class="method-grid"><div><b>เส้นทึบ</b><span>สัดส่วนจากข้อมูลจริงที่สังเกตได้</span></div><div><b>เส้นประ</b><span>Linear Regression ในช่วงปีข้อมูลจริง</span></div><div><b>เส้นจุด</b><span>การต่อสมการแนวโน้มออกไป 3 ปี ไม่ใช่คำยืนยันอนาคต</span></div></div>
     </section>
 
-    <section class="tab-panel" id="panel-gender">
+    <section class="tab-panel" id="panel-gender" hidden>
       <div class="section-heading"><div><div class="section-kicker">04 / GENDER STRUCTURE</div><h2>Gender Gap</h2><p>เปรียบเทียบสัดส่วนอาชีพภายในโครงสร้างผู้มีงานทำของผู้หญิงและผู้ชายในประเทศไทย</p></div><span class="section-number">04</span></div>
       <div class="gender-explain"><span class="gender-swatch male"></span><span>ด้านซ้าย: เพศชาย</span><span class="gender-swatch female"></span><span>ด้านขวา: เพศหญิง</span><span class="legend-spacer"></span><span>ค่าเฉลี่ยปี 2013–2023</span></div>
       <div class="chart-card"><div class="chart-topline"><span class="chart-label">FEMALE VS MALE OCCUPATION SHARE</span><span class="chart-context">ประเทศไทย · 21 กลุ่มที่เปรียบเทียบร่วมกัน</span></div><div id="gender-chart" class="chart-area chart-gender"></div></div>
@@ -137,7 +137,7 @@
       <div class="insight-note"><b>วิธีอ่าน:</b> สัดส่วนหญิงคำนวณจากจำนวนผู้หญิงในอาชีพนั้นหารด้วยผู้มีงานทำหญิงทั้งประเทศ ส่วนสัดส่วนชายใช้ตัวหารของผู้ชายแยกต่างหาก ความแตกต่างจึงเป็น “จุดเปอร์เซ็นต์” ไม่ใช่เปอร์เซ็นต์การเปลี่ยนแปลง</div>
     </section>
 
-    <section class="tab-panel" id="panel-thailand">
+    <section class="tab-panel" id="panel-thailand" hidden>
       <div class="section-heading"><div><div class="section-kicker">05 / THAILAND DEEP DIVE</div><h2>เจาะลึกประเทศไทย</h2><p>สำรวจกลุ่มอาชีพที่ไทยรายงานเพิ่มเติมนอกเหนือจากชุดเปรียบเทียบข้ามประเทศ</p></div><span class="section-number">05</span></div>
       <div class="control-bar"><label class="wide-label">กลุ่มอาชีพ<select id="thailand-occupation" aria-label="เลือกกลุ่มอาชีพประเทศไทย"></select></label><span class="control-hint">ค่าเริ่มต้น: รหัส 25 · ICT Professionals</span></div>
       <div id="thailand-summary" class="summary-band"></div>
@@ -146,7 +146,7 @@
       <div class="insight-note"><b>ข้อจำกัด:</b> กลุ่มอาชีพ ISCO ระดับ 2 หลักเป็นหมวดกว้าง ไม่ใช่ชื่อตำแหน่งงานเฉพาะ กลุ่มที่ไทยรายงานเพิ่มเติมไม่ควรนำไปเทียบตรง ๆ กับประเทศอื่นหากไม่ผ่านเกณฑ์ข้อมูลร่วมกัน เส้นประเป็นเส้นแนวโน้มย้อนหลังเท่านั้น ไม่ใช่เส้นคาดการณ์</div>
     </section>
 
-    <section class="tab-panel" id="panel-backtest">
+    <section class="tab-panel" id="panel-backtest" hidden>
       <div class="section-heading"><div><div class="section-kicker">06 / MODEL EVALUATION</div><h2>Backtest: ทดสอบแบบจำลองอย่างง่าย</h2><p>เปรียบเทียบ Linear Trend กับ Naive โดยฝึกจากข้อมูลปี 2013–2023 แล้วทดสอบกับข้อมูลจริงปี 2024–2025 ของประเทศไทย</p></div><span class="section-number">06</span></div>
       <div class="model-cards"><article class="model-card"><span>Trend Line</span><strong>0.166</strong><small>MAE ปี 2024 · จุดเปอร์เซ็นต์</small><em>2025: 0.180</em></article><article class="model-card model-card-highlight"><span>Naive</span><strong>0.136</strong><small>MAE ปี 2024 · จุดเปอร์เซ็นต์</small><em>2025: 0.148</em></article><article class="model-card"><span>ผลการเปรียบเทียบ</span><strong>33.8%</strong><small>กรณีที่ Trend Line คลาดเคลื่อนน้อยกว่า Naive</small><em>80 กลุ่มอาชีพ–ปีที่ทดสอบ</em></article></div>
       <div class="chart-card"><div class="chart-topline"><span class="chart-label">MEAN ABSOLUTE ERROR (MAE)</span><span class="chart-context">ยิ่งต่ำยิ่งดี · หน่วยจุดเปอร์เซ็นต์</span></div><div id="backtest-chart" class="chart-area chart-backtest"></div></div>
@@ -154,7 +154,7 @@
       <div class="insight-note"><b>ข้อค้นพบ:</b> ในการทดสอบนี้ Naive มี MAE เฉลี่ยต่ำกว่า Trend Line ทั้งปี 2024 และ 2025 จึงทำได้ดีกว่าในภาพรวมของชุดทดสอบนี้ ไม่ได้หมายความว่า Naive จะดีกว่าในทุกอาชีพหรือทุกช่วงเวลา</div>
     </section>
 
-    <section class="tab-panel" id="panel-about">
+    <section class="tab-panel" id="panel-about" hidden>
       <div class="section-heading"><div><div class="section-kicker">DATA NOTES</div><h2>ข้อมูลและวิธีใช้</h2><p>ที่มา นิยาม ตัวหาร และข้อจำกัดที่ควรทราบก่อนตีความกราฟ</p></div><span class="section-number">INFO</span></div>
       <div class="about-grid">
         <article class="about-card"><span class="card-index">DATA SOURCE</span><h3>แหล่งข้อมูลต้นทาง</h3><p><b>ILOSTAT · International Labour Organization (ILO)</b></p><p>ชุดข้อมูล Employment by sex and occupation – ISCO level 2 (thousands)</p><p class="mono">EMP_TEMP_SEX_OC2_NB_A</p><a class="inline-link" href="https://ilostat.ilo.org/data/" target="_blank" rel="noopener">เปิดเว็บไซต์ ILOSTAT ↗</a></article>

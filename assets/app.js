@@ -38,7 +38,12 @@
 
   function setActiveTab(tab) {
     document.querySelectorAll('.nav-tab').forEach((button) => button.classList.toggle('active', button.dataset.tab === tab));
-    document.querySelectorAll('.tab-panel').forEach((panel) => panel.classList.toggle('active', panel.id === `panel-${tab}`));
+    document.querySelectorAll('.tab-panel').forEach((panel) => {
+      const isActive = panel.id === `panel-${tab}`;
+      panel.classList.toggle('active', isActive);
+      panel.hidden = !isActive;
+      panel.setAttribute('aria-hidden', String(!isActive));
+    });
     const tabLabels = {
       overview: 'Dashboard', ranking: 'Career Ranking', fingerprint: 'Country Fingerprint',
       evolution: 'Career Evolution', gender: 'Gender Gap', thailand: 'Thailand Deep Dive',
@@ -284,6 +289,7 @@
 
   async function start() {
     setupNavigation();
+    setActiveTab('overview');
     const status = $('load-status');
     try {
       const response = await fetch(DATA_URL, {cache: 'no-store'});
