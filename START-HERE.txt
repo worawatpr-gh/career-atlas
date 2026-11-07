@@ -1,0 +1,26 @@
+CAREER ATLAS WEB — START HERE
+
+เป้าหมาย: เว็บไซต์สำหรับนักเรียน ใช้งานผ่าน URL โดยไม่ต้อง Login หรือใช้ Google Colab Runtime
+
+ก่อนเผยแพร่:
+1) แตกไฟล์ ZIP
+2) ดูคู่มือใน README.md
+3) อัปโหลดไฟล์และโฟลเดอร์ทั้งหมดไปยัง GitHub repository โดยให้ index.html อยู่ที่ root
+4) เปิด GitHub Settings > Pages > Deploy from a branch > main > /(root) > Save
+5) เปิด URL ที่ GitHub Pages ให้มา ทดสอบในหน้าต่างไม่ระบุตัวตน/คอมพิวเตอร์ที่ไม่ได้ Login ก่อนใช้จริง
+
+ทดลองในเครื่อง:
+เปิด Terminal ในโฟลเดอร์นี้ แล้วรัน: py -m http.server 8000
+จากนั้นเปิด http://localhost:8000
+
+หน้าตาเว็บไซต์: ธีม Admin Dashboard มีเมนูด้านซ้าย การ์ดสรุปสีพาสเทล และพื้นที่กราฟสีขาว
+ปุ่ม ☰ ด้านบนใช้ยุบ/ขยายเมนู
+
+ไฟล์สำคัญ:
+- index.html: หน้าเว็บไซต์
+- data/career_atlas_data.json: ข้อมูลที่เตรียมจาก Snapshot ของ Notebook
+- assets/app.js: ระบบ Dropdown และการสร้างกราฟ
+- assets/plotly.min.js: ไลบรารีกราฟที่รวมมาในแพ็กเกจ
+- assets/style.css: รูปแบบเว็บไซต์
+
+หมายเหตุ: URL สาธารณะยังไม่ได้ถูกสร้าง ต้องนำไฟล์ไปเผยแพร่บน GitHub Pages ก่อน
