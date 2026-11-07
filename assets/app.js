@@ -134,7 +134,18 @@
     const trace = {
       type: 'heatmap', x: DATA.heatmapCountries.map(countryLabel),
       y: occ.map(r => `${r.code} · ${r.nameTh}`), z, text, texttemplate: '%{text}',
-      textfont: {family: baseFont, size: 10}, colorscale: 'YlOrRd',
+      textfont: {family: baseFont, size: 10},
+      // ต่ำ = เหลืองอ่อน, สูง = แดงเข้ม ให้ตรงกับคำอธิบายใต้หัวข้อ
+      colorscale: [
+        [0.00, '#fff7bc'],
+        [0.25, '#fee391'],
+        [0.50, '#fec44f'],
+        [0.75, '#f16913'],
+        [1.00, '#99000d']
+      ],
+      reversescale: false,
+      zmin: 0,
+      zmax: 25.1,
       colorbar: {title: 'สัดส่วน (%)', titleside: 'right', thickness: 14},
       customdata: occ.map(r => DATA.heatmapCountries.map(() => r.code)),
       hovertemplate: '<b>%{y}</b><br>ประเทศ: %{x}<br>รหัสอาชีพ: %{customdata}<br>สัดส่วนเฉลี่ย: %{z:.2f}%<extra></extra>'
