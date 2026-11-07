@@ -225,3 +225,142 @@ tbody tr:hover{background:#f7f9f9;}
   .sidebar{transition:transform .2s ease,width .2s ease;}
   .main-content{transition:margin-left .2s ease;}
 }
+
+
+/* ============================================================
+   NAVIGATION REFINEMENT — HORIZONTAL TOP MENU
+   Font pairing: Inter (English) + Noto Sans Thai (Thai)
+   ============================================================ */
+:root {
+  --font-en: "Inter", sans-serif;
+  --font-th: "Noto Sans Thai", sans-serif;
+}
+html, body, button, input, select, textarea {
+  font-family: "Inter", "Noto Sans Thai", Tahoma, sans-serif;
+}
+body {
+  margin: 0;
+  background: #f2f3f4;
+  color: #43515d;
+  overflow-x: hidden;
+}
+.site-header {
+  height: 58px;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: #344251;
+}
+.header-inner {
+  height: 58px;
+  max-width: none;
+  margin: 0;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+.brand { gap: 11px; min-width: 0; }
+.brand-mark { width: 34px; height: 34px; border-radius: 6px; }
+.brand-copy strong { font-family: "Inter", "Noto Sans Thai", sans-serif; }
+.brand-copy small { font-family: "Inter", "Noto Sans Thai", sans-serif; }
+.header-right { margin-left: auto; }
+.app-shell { min-height: calc(100vh - 58px); }
+.main-content {
+  margin-left: 0 !important;
+  min-width: 0;
+  width: 100%;
+  min-height: calc(100vh - 58px);
+}
+.content-topbar {
+  height: 40px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e7e9eb;
+}
+.main-nav {
+  display: flex !important;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+  min-height: 52px;
+  margin: 0;
+  padding: 7px 20px;
+  overflow-x: auto;
+  overflow-y: hidden;
+  white-space: nowrap;
+  background: #fff;
+  border-bottom: 1px solid #e2e7ea;
+  box-shadow: 0 2px 5px rgba(35, 49, 59, .035);
+  scrollbar-width: thin;
+  position: relative;
+  z-index: 20;
+}
+.main-nav .nav-tab {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 36px;
+  border: 1px solid transparent;
+  border-radius: 5px;
+  padding: 7px 12px;
+  color: #657580;
+  background: transparent;
+  font-family: "Inter", "Noto Sans Thai", sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  transition: background .16s ease, color .16s ease, border-color .16s ease;
+}
+.main-nav .nav-tab:hover {
+  background: #f1f5f6;
+  color: #354b59;
+}
+.main-nav .nav-tab.active {
+  color: #fff;
+  background: #5b8492;
+  border-color: #5b8492;
+  box-shadow: 0 2px 4px rgba(45, 77, 90, .12);
+}
+.main-nav .nav-icon { font-size: 13px; line-height: 1; }
+.page-shell {
+  max-width: none;
+  width: 100%;
+  margin: 0;
+  padding: 0 24px 32px;
+}
+.sidebar, .sidebar-backdrop, .sidebar-toggle { display: none !important; }
+.dashboard-welcome { padding-top: 19px; }
+.metric-card { box-shadow: 0 2px 7px rgba(38, 54, 66, .07); }
+.chart-card, .table-card, .overview-card, .about-card {
+  box-shadow: 0 2px 7px rgba(38, 54, 66, .045);
+}
+@media (max-width: 900px) {
+  .header-inner { padding: 0 16px; }
+  .content-topbar { padding: 0 16px; }
+  .main-nav { padding-left: 14px; padding-right: 14px; }
+  .page-shell { padding-left: 16px; padding-right: 16px; }
+}
+@media (max-width: 760px) {
+  .site-header, .header-inner { height: 54px; }
+  .header-inner { padding: 0 12px; gap: 9px; }
+  .brand-mark { width: 31px; height: 31px; }
+  .brand-copy strong { font-size: 12px; letter-spacing: .3px; }
+  .brand-copy small { display: none; }
+  .access-pill { font-size: 0; padding: 0; background: transparent; }
+  .access-pill .dot { width: 9px; height: 9px; margin: 0; }
+  .content-topbar { height: 35px; padding: 0 12px; }
+  .topbar-date { display: none; }
+  .main-nav {
+    min-height: 48px;
+    padding: 6px 10px;
+    gap: 4px;
+    position: sticky;
+    top: 54px;
+  }
+  .main-nav .nav-tab { min-height: 34px; padding: 6px 9px; font-size: 10px; }
+  .page-shell { padding: 0 12px 22px; }
+  .dashboard-welcome { padding: 14px 0 12px; }
+}

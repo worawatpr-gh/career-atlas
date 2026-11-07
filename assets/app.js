@@ -5,7 +5,7 @@
   const $ = (id) => document.getElementById(id);
   const thaiNumber = (value, digits = 2) => Number(value).toLocaleString('th-TH', {minimumFractionDigits: digits, maximumFractionDigits: digits});
   const countryLabel = (country) => (window.CA_DATA?.meta?.countryLabels || {})[country] || country;
-  const baseFont = 'Tahoma, "Noto Sans Thai", Arial, sans-serif';
+  const baseFont = '"Inter", "Noto Sans Thai", Tahoma, sans-serif';
   const countryColors = {
     'France': '#636EFA',
     'Japan': '#EF553B',
