@@ -407,3 +407,25 @@ tbody tr:hover {background:#faf7ff}
   #panel-overview .metric-card small{font-size:8px !important}
   #panel-overview .metric-card .metric-symbol{width:27px;height:27px;right:11px !important;top:12px !important;font-size:14px !important}
 }
+
+
+/* Layout gutter refinement v10: keep dashboard content comfortably inset from viewport edges. */
+.page-shell{
+  width:100% !important;
+  max-width:1600px !important;
+  margin-left:auto !important;
+  margin-right:auto !important;
+  padding-left:40px !important;
+  padding-right:40px !important;
+}
+#panel-overview .metrics-grid{
+  width:100% !important;
+  margin-left:0 !important;
+  margin-right:0 !important;
+}
+@media(max-width:900px){
+  .page-shell{padding-left:26px !important;padding-right:26px !important;}
+}
+@media(max-width:560px){
+  .page-shell{padding-left:16px !important;padding-right:16px !important;}
+}
