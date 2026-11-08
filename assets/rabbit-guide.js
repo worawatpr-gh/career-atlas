@@ -4,9 +4,9 @@
   const style = document.createElement('style');
   style.textContent = `
     #ca-rabbit { position:fixed; right:22px; bottom:20px; z-index:9998; display:flex; align-items:flex-end; gap:10px; font-family:Inter,"Noto Sans Thai",Tahoma,sans-serif; }
-    #ca-rabbit-trigger { width:88px; height:88px; border:2px solid #e4d9ff; border-radius:50%; background:#fff; padding:3px; box-shadow:0 7px 24px rgba(56,35,107,.22); cursor:pointer; transition:transform .2s; }
+    #ca-rabbit-trigger { width:88px; height:88px; border:2px solid #e4d9ff; border-radius:50%; background:#fff; padding:3px; box-shadow:0 7px 24px rgba(56,35,107,.22); cursor:pointer; transition:transform .2s; animation:caRabbitFloat 3s ease-in-out infinite; transform-origin:50% 85%; }
     #ca-rabbit-trigger:hover { transform:translateY(-4px) scale(1.04); }
-    #ca-rabbit-trigger img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; }
+    #ca-rabbit-trigger img { width:100%; height:100%; object-fit:cover; border-radius:50%; display:block; animation:caRabbitSway 4.5s ease-in-out infinite; }
     #ca-rabbit-panel { display:none; width:min(340px,calc(100vw - 132px)); max-height:min(440px,70vh); overflow:auto; background:#fff; border:1px solid #e5dcf8; border-radius:18px; box-shadow:0 12px 38px rgba(40,24,76,.22); padding:16px; color:#302744; }
     #ca-rabbit.open #ca-rabbit-panel { display:block; animation:caRabbitIn .18s ease-out; }
     #ca-rabbit-panel h3 { margin:0 28px 8px 0; font-size:15px; color:#4c2d89; }
@@ -19,6 +19,9 @@
     .ca-guide-card { cursor:pointer; }
     .ca-guide-card:focus-visible { outline:3px solid #9c80f2; outline-offset:3px; }
     @keyframes caRabbitIn { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:translateY(0); } }
+    @keyframes caRabbitFloat { 0%,100% { transform:translateY(0) rotate(-1deg); } 50% { transform:translateY(-7px) rotate(1deg); } }
+    @keyframes caRabbitSway { 0%,100% { transform:rotate(0deg) scale(1); } 25% { transform:rotate(-2deg) scale(1.015); } 75% { transform:rotate(2deg) scale(1.015); } }
+    @media (prefers-reduced-motion: reduce) { #ca-rabbit-trigger, #ca-rabbit-trigger img { animation:none; } }
     @media(max-width:600px) { #ca-rabbit { right:10px; bottom:12px; gap:6px; } #ca-rabbit-trigger { width:68px; height:68px; } #ca-rabbit-caption { max-width:100px; font-size:10px; } }
   `;
   document.head.appendChild(style);
