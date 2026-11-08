@@ -284,3 +284,19 @@ tbody tr:hover {background:#faf7ff}
 @media (max-width:640px) {
   .site-header .header-inner { min-height:80px !important; padding-top:10px !important; padding-bottom:10px !important; }
 }
+
+/* Header proportion fix v6: reserve real height and vertically center all contents. */
+.site-header { min-height:104px !important; height:auto !important; overflow:hidden; }
+.site-header .header-inner {
+  display:flex !important; align-items:center !important; justify-content:space-between !important;
+  box-sizing:border-box !important; width:100% !important;
+  min-height:104px !important; height:104px !important; padding:0 30px !important;
+}
+.site-header .brand, .site-header .header-right { display:flex !important; align-items:center !important; }
+.site-header .brand-mark { flex:0 0 48px; }
+.site-header .brand-copy { line-height:1.35; }
+.site-header .brand-copy strong, .site-header .brand-copy small { display:block; }
+@media(max-width:640px) {
+  .site-header { min-height:82px !important; }
+  .site-header .header-inner { min-height:82px !important; height:82px !important; padding:0 14px !important; }
+}
