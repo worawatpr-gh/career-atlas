@@ -300,3 +300,12 @@ tbody tr:hover {background:#faf7ff}
   .site-header { min-height:82px !important; }
   .site-header .header-inner { min-height:82px !important; height:82px !important; padding:0 14px !important; }
 }
+
+/* Header simplification: text-only brand, no access badge, no breadcrumb strip. */
+.site-header .brand-mark,
+.site-header .access-pill { display:none !important; }
+.site-header .brand { gap:0 !important; }
+.site-header .brand-copy { margin-left:0 !important; }
+.site-header .header-inner { justify-content:space-between !important; }
+.content-topbar,
+.breadcrumb-mobile { display:none !important; }
