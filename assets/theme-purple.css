@@ -265,3 +265,16 @@ tbody tr:hover {background:#faf7ff}
 @media(prefers-reduced-motion:reduce) {
   .metric-card,.overview-card,.about-card,.main-nav .nav-tab {transition:none}
 }
+
+/* User refinement: moon-only header and compact, still rabbit. */
+.site-header { position:relative; isolation:isolate; overflow:hidden; }
+.site-header:after { display:none !important; content:none !important; }
+.site-header:before { opacity:.34; }
+#ca-rabbit { right:18px !important; bottom:10px !important; gap:8px !important; }
+#ca-rabbit-trigger { width:82px !important; height:108px !important; animation:none !important; transition:none !important; transform:none !important; filter:drop-shadow(0 5px 8px rgba(50,12,101,.20)) !important; }
+#ca-rabbit-trigger:hover { transform:none !important; }
+#ca-rabbit-trigger img { animation:none !important; transform:none !important; }
+#ca-rabbit-caption { margin-bottom:70px !important; max-width:190px !important; }
+#ca-rabbit.ca-react #ca-rabbit-trigger { animation:none !important; }
+@media(max-width:900px) { #ca-rabbit-trigger { width:72px !important; height:94px !important; } #ca-rabbit-caption { margin-bottom:58px !important; } }
+@media(max-width:640px) { #ca-rabbit { right:8px !important; bottom:8px !important; } #ca-rabbit-trigger { width:60px !important; height:80px !important; } #ca-rabbit-caption { margin-bottom:46px !important; max-width:125px !important; } }
