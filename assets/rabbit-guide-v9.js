@@ -156,11 +156,29 @@ function initRabbit(){
  ];
  const textOf=el=>(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
  function explainCard(card){
-  const text=textOf(card),rule=rules.find(item=>item[0].test(text));
-  if(rule){explain(rule[1],rule[2],rule[3],card);return;}
-  // Chart cards in Ranking/Fingerprint/Evolution use labels or their tab heading,
-  // rather than h1-h4 elements inside the card itself.
+  const text=textOf(card);
   const panel=card.closest('.tab-panel');
+  const panelId=panel?.id||'';
+  // These three chart tabs must always use their own section title.
+  // Do this before generic text rules because chart SVG labels can accidentally
+  // contain words that match unrelated rules.
+  const chartTabTitles={
+   'panel-ranking':'Career Ranking',
+   'panel-fingerprint':'Country Fingerprint',
+   'panel-evolution':'Career Evolution'
+  };
+  if(chartTabTitles[panelId]){
+   const heading=panel.querySelector('.section-heading h2');
+   const headingText=heading?textOf(heading):chartTabTitles[panelId];
+   const chartLabel=card.querySelector('.chart-label');
+   const detail=chartLabel?textOf(chartLabel):headingText;
+   const description=panel.querySelector('.section-heading p')?.textContent?.trim()
+    ||('กราฟ '+detail+' แสดงข้อมูลในหัวข้อ '+headingText);
+   explain(headingText,description,'อ่านชื่อกราฟ แกน หน่วย ช่วงเวลา และตัวกรองประกอบกันก่อนสรุปผล',card);
+   return;
+  }
+  const rule=rules.find(item=>item[0].test(text));
+  if(rule){explain(rule[1],rule[2],rule[3],card);return;}
   const heading=card.querySelector('h1,h2,h3,h4,.chart-label,.metric-label,.card-index,.table-heading,strong')
    ||panel?.querySelector('.section-heading h2')
    ||panel?.querySelector('.section-heading .section-kicker');
