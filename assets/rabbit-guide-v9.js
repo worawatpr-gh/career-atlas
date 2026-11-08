@@ -17,11 +17,13 @@ function initRabbit(){
  '#ca-rabbit-trigger .ca-rabbit-fallback{display:none;position:absolute;inset:0;place-items:center;font-size:68px}',
  '#ca-rabbit-caption{max-width:190px!important;margin:0 0 70px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #e6dcf7!important;border-radius:13px 13px 2px 13px!important;color:#58427f!important;font-size:12px!important;line-height:1.5!important;box-shadow:0 4px 14px rgba(56,35,107,.12)!important;pointer-events:none!important}',
  '#ca-rabbit-panel{display:none;width:min(340px,calc(100vw - 130px))!important;max-height:65vh!important;overflow:auto!important;background:#fff!important;border:1px solid #e5dcf8!important;border-radius:18px!important;box-shadow:0 12px 38px rgba(40,24,76,.22)!important;padding:16px!important;color:#302744!important;position:relative!important;pointer-events:auto!important}',
- '#ca-rabbit.open #ca-rabbit-panel{display:block!important}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
+ '#ca-rabbit.open #ca-rabbit-panel{display:block!important;animation:ca-panel-in .22s ease-out both}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
+ '@keyframes ca-panel-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}',
+ '#ca-rabbit.ca-bounce #ca-rabbit-trigger{animation:ca-rabbit-pop .42s ease-in-out 1}@keyframes ca-rabbit-pop{0%,100%{transform:translateY(0) rotate(0)}35%{transform:translateY(-10px) rotate(-5deg)}70%{transform:translateY(1px) rotate(3deg)}',
  '#ca-rabbit-panel h3{margin:0 28px 8px 0!important;font-size:15px!important;color:#4c2d89!important}#ca-rabbit-panel p{margin:7px 0!important;font-size:12px!important;line-height:1.65!important}',
  '#ca-rabbit-panel .ca-tip{margin-top:10px!important;padding:10px 11px!important;border-radius:11px!important;background:#f2edff!important;color:#513b7d!important;font-size:12px!important;line-height:1.6!important}',
  '#ca-rabbit-panel .ca-close{position:absolute!important;right:12px!important;top:10px!important;border:0!important;background:transparent!important;color:#7d6b9f!important;font-size:20px!important;cursor:pointer!important}',
- '#ca-rabbit.ca-moving{transition:left .65s ease,top .65s ease,right .65s,bottom .65s}#ca-rabbit.ca-moving #ca-rabbit-trigger{animation:ca-hop .28s ease-in-out 2}@keyframes ca-hop{50%{transform:translateY(-9px) rotate(-4deg)}}',
+ 
  '.ca-guide-card{cursor:pointer}.ca-guide-card:focus-visible{outline:3px solid #9c80f2;outline-offset:3px}',
  '@media(max-width:640px){#ca-rabbit{right:6px!important;bottom:6px!important;gap:5px!important}#ca-rabbit-trigger{width:66px!important;height:84px!important;flex-basis:66px!important}#ca-rabbit-caption{max-width:120px!important;margin-bottom:46px!important;font-size:10px!important}#ca-rabbit-panel{width:min(280px,calc(100vw - 95px))!important;padding:12px!important}}'
  ].join('\n');
@@ -30,20 +32,11 @@ function initRabbit(){
  const img=root.querySelector('img');img.src=new URL('rabbit-3d.png',scriptUrl).href;
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
- function setPos(prop,value){root.style.setProperty(prop,value,'important');} function home(){root.classList.remove('open','ca-moving');setPos('left','auto');setPos('top','auto');setPos('right','16px');setPos('bottom','12px');}
- function moveTo(target){
-  if(!target||!target.getBoundingClientRect)return;
-  const rect=target.getBoundingClientRect(),mobile=innerWidth<640;
-  const left=Math.max(8,Math.min(innerWidth-(mobile?80:105),rect.left+rect.width/2-(mobile?145:210)));
-  const top=Math.max(90,Math.min(innerHeight-165,rect.top+rect.height/2-65));
-  setPos('right','auto');setPos('bottom','auto');setPos('left',(innerWidth-105)+'px');setPos('top',(innerHeight-145)+'px');
-  root.classList.add('ca-moving');requestAnimationFrame(()=>{setPos('left',left+'px');setPos('top',top+'px');});
-  setTimeout(()=>root.classList.remove('ca-moving'),950);
- }
+ function home(){root.classList.remove('open','ca-bounce');}
  function explain(heading,description,tip,target){
   title.textContent=heading;body.replaceChildren();const p=document.createElement('p');p.textContent=description;body.appendChild(p);
   const box=document.createElement('div');box.className='ca-tip';box.textContent='คำแนะนำ: '+tip;body.appendChild(box);
-  root.classList.add('open');if(target)moveTo(target);
+  root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;root.classList.add('ca-bounce');
  }
  root.querySelector('#ca-rabbit-trigger').addEventListener('click',()=>{if(root.classList.contains('open'))home();else explain('ผู้ช่วยนักสำรวจข้อมูล','ฉันช่วยอธิบายข้อมูล กราฟ และตัวกรองใน Career Atlas ได้','เลือกการ์ดหรือเมนูที่ต้องการให้ช่วยอธิบาย',null);});
  root.querySelector('.ca-close').addEventListener('click',home);
