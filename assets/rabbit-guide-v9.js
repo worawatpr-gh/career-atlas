@@ -88,6 +88,8 @@ function initRabbit(){
   event.preventDefault();
   root.style.setProperty('left',clamp(dragState.left+dx,0,Math.max(0,innerWidth-dragState.width))+'px','important');
   root.style.setProperty('top',clamp(dragState.top+dy,0,Math.max(0,innerHeight-dragState.height))+'px','important');
+  // Keep the explanation panel attached to the rabbit while it is being dragged.
+  positionPanel();
  },{passive:false});
  function finishDrag(event){
   if(!dragState||event.pointerId!==dragState.pointerId)return;
