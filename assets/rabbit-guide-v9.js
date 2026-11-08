@@ -53,11 +53,11 @@ function initRabbit(){
  trigger.addEventListener('pointermove',event=>{
   if(!dragState||event.pointerId!==dragState.pointerId)return;
   const dx=event.clientX-dragState.startX,dy=event.clientY-dragState.startY;
-  if(!dragged&&(Math.abs(dx)>5||Math.abs(dy)>5)){dragged=true;root.classList.add('ca-dragging');root.classList.remove('ca-snapping');root.style.right='auto';root.style.bottom='auto';root.style.left=dragState.left+'px';root.style.top=dragState.top+'px';}
+  if(!dragged&&(Math.abs(dx)>5||Math.abs(dy)>5)){dragged=true;root.classList.add('ca-dragging');root.classList.remove('ca-snapping');root.style.setProperty('right','auto','important');root.style.setProperty('bottom','auto','important');root.style.setProperty('left',dragState.left+'px','important');root.style.setProperty('top',dragState.top+'px','important');}
   if(!dragged)return;
   const rect=root.getBoundingClientRect();
-  root.style.left=clamp(dragState.left+dx,0,Math.max(0,innerWidth-rect.width))+'px';
-  root.style.top=clamp(dragState.top+dy,0,Math.max(0,innerHeight-rect.height))+'px';
+  root.style.setProperty('left',clamp(dragState.left+dx,0,Math.max(0,innerWidth-rect.width))+'px','important');
+  root.style.setProperty('top',clamp(dragState.top+dy,0,Math.max(0,innerHeight-rect.height))+'px','important');
  });
  function finishDrag(event){
   if(!dragState||event.pointerId!==dragState.pointerId)return;
@@ -75,7 +75,7 @@ function initRabbit(){
   if(edge==='right')left=Math.max(0,innerWidth-w);
   if(edge==='top')top=0;
   if(edge==='bottom')top=Math.max(0,innerHeight-h);
-  root.style.left=left+'px';root.style.top=top+'px';root.style.right='auto';root.style.bottom='auto';
+  root.style.setProperty('left',left+'px','important');root.style.setProperty('top',top+'px','important');root.style.setProperty('right','auto','important');root.style.setProperty('bottom','auto','important');
   setTimeout(()=>root.classList.remove('ca-snapping'),380);
   setTimeout(()=>{suppressClick=false;},80);
  }
