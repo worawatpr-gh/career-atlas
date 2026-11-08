@@ -30,14 +30,14 @@ function initRabbit(){
  const img=root.querySelector('img');img.src=new URL('rabbit-3d.png',scriptUrl).href;
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
- function home(){root.classList.remove('open','ca-moving');root.style.left='auto';root.style.top='auto';root.style.right='16px';root.style.bottom='12px';}
+ function setPos(prop,value){root.style.setProperty(prop,value,'important');} function home(){root.classList.remove('open','ca-moving');setPos('left','auto');setPos('top','auto');setPos('right','16px');setPos('bottom','12px');}
  function moveTo(target){
   if(!target||!target.getBoundingClientRect)return;
   const rect=target.getBoundingClientRect(),mobile=innerWidth<640;
   const left=Math.max(8,Math.min(innerWidth-(mobile?80:105),rect.left+rect.width/2-(mobile?145:210)));
   const top=Math.max(90,Math.min(innerHeight-165,rect.top+rect.height/2-65));
-  root.style.right='auto';root.style.bottom='auto';root.style.left=(innerWidth-105)+'px';root.style.top=(innerHeight-145)+'px';
-  root.classList.add('ca-moving');requestAnimationFrame(()=>{root.style.left=left+'px';root.style.top=top+'px';});
+  setPos('right','auto');setPos('bottom','auto');setPos('left',(innerWidth-105)+'px');setPos('top',(innerHeight-145)+'px');
+  root.classList.add('ca-moving');requestAnimationFrame(()=>{setPos('left',left+'px');setPos('top',top+'px');});
   setTimeout(()=>root.classList.remove('ca-moving'),950);
  }
  function explain(heading,description,tip,target){
