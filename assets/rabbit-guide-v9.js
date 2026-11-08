@@ -37,9 +37,11 @@ function initRabbit(){
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
  function home(){
   const triggerEl=root.querySelector('#ca-rabbit-trigger');
-  const triggerRect=triggerEl.getBoundingClientRect();
+  const targetTop=triggerEl.getBoundingClientRect().top;
   root.classList.remove('open','ca-bounce');
-  root.style.setProperty('top',triggerRect.top+'px','important');
+  const closedRootRect=root.getBoundingClientRect();
+  const closedTriggerTop=triggerEl.getBoundingClientRect().top;
+  root.style.setProperty('top',(closedRootRect.top+targetTop-closedTriggerTop)+'px','important');
   root.style.setProperty('bottom','auto','important');
  }
  function positionPanelAboveRabbit(){
