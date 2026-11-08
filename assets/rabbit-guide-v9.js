@@ -79,8 +79,11 @@ function initRabbit(){
   const rect=root.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
   const distances=[{edge:'left',d:cx},{edge:'right',d:innerWidth-cx},{edge:'top',d:cy},{edge:'bottom',d:innerHeight-cy}].sort((a,b)=>a.d-b.d);
   const edge=distances[0].edge;
+  // Keep the same horizontal layout at every height: corners use the
+  // left/right side layout too, rather than switching to a top/bottom layout.
+  const side=cx<=innerWidth/2?'left':'right';
   root.classList.remove('ca-edge-left','ca-edge-right','ca-edge-top','ca-edge-bottom');
-  root.classList.add('ca-edge-'+edge,'ca-snapping');
+  root.classList.add('ca-edge-'+side,'ca-snapping');
   let left=clamp(rect.left,0,Math.max(0,innerWidth-rect.width));
   let top=clamp(rect.top,0,Math.max(0,innerHeight-rect.height));
   if(edge==='left')left=0;
