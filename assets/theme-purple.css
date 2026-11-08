@@ -1,0 +1,73 @@
+/* Career Atlas — Purple Theme
+   UI-only palette overrides. Chart series and data encodings remain unchanged. */
+:root {
+  --ink: #29243a;
+  --muted: #746d85;
+  --navy: #38236b;
+  --navy2: #4b3487;
+  --blue: #6d4aff;
+  --teal: #8b6cf6;
+  --amber: #b39aff;
+  --paper: #f7f5fc;
+  --line: #e8e1f4;
+  --card: #ffffff;
+  --soft: #eee8ff;
+  --shadow: 0 2px 8px rgba(56, 35, 107, .07);
+}
+body { background: #f7f5fc; color: #39334a; }
+.site-header { background: #38236b; }
+.brand-mark { background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.38); }
+.brand-copy small, .source-link { color: #e2d9ff; }
+.access-pill { background: rgba(255,255,255,.10); color: #f1edff; }
+.dot { background: #a8f0cf; }
+.content-topbar { border-bottom-color: #e8e1f4; }
+.breadcrumb strong { color: #6d4aff; }
+.topbar-live { color: #6d4aff; }
+.main-nav { border-bottom-color: #e8e1f4; }
+.main-nav .nav-tab { color: #6e6680; }
+.main-nav .nav-tab:hover { background: #f0ebfb; color: #38236b; }
+.main-nav .nav-tab.active { background: #6d4aff; border-color: #6d4aff; color: #fff; box-shadow: 0 2px 6px rgba(109,74,255,.2); }
+.button-primary { background: #6d4aff; color: #fff; box-shadow: 0 3px 9px rgba(109,74,255,.2); }
+.button-primary:hover { background: #5938dc; }
+.button-secondary { border-color: #d9cffa; color: #50378d; }
+.button-secondary:hover { border-color: #9c83ed; }
+.dashboard-welcome h1, h1 { color: #38236b; }
+.section-kicker, .eyebrow { color: #8065d9; }
+.section-heading h2 { color: #49347e; }
+.section-number { color: #e5def5; }
+.metric-coral { background: #9476ee; }
+.metric-blue { background: #7656dc; }
+.metric-yellow { background: #b39aeF; }
+.metric-green { background: #6846c8; }
+.metric-card { box-shadow: 0 2px 7px rgba(56,35,107,.12); }
+.overview-dark { background: #4b3487; border-color: #4b3487; }
+.overview-dark .card-index { color: #d9ceff; }
+.text-button { color: #e6ddff; }
+.feature-list b { color: #6d4aff; }
+.workflow-strip { background: #eee8ff; border-color: #e2d8fb; }
+.workflow-title h3 { color: #49347e; }
+.workflow-steps b { background: #dcd0ff; color: #50378d; }
+.control-bar select:focus { border-color: #8b6cf6; box-shadow: 0 0 0 2px rgba(109,74,255,.13); }
+.control-bar select { border-color: #ddd5ef; }
+.chart-card, .table-card, .overview-card, .about-card, .welcome-stat { border-color: #e8e1f4; }
+.insight-note { border-left-color: #8b6cf6; background: #f0ebfb; color: #5f5675; }
+.insight-note b { color: #50378d; }
+.method-grid div { background: #f0ebfb; }
+.method-grid b, .table-heading h3 { color: #49347e; }
+th { background: #f3effb; color: #6e6680; }
+tbody tr:hover { background: #faf8ff; }
+.summary-band { background: #f0ebfb; border-color: #e1d7f7; color: #625779; }
+.summary-band strong { color: #6d4aff; }
+.model-card strong { color: #6d4aff; }
+.model-card-highlight { background: #f0ebfb; border-color: #ded3fa; }
+.model-card-highlight strong { color: #5938dc; }
+.inline-link { color: #6d4aff; }
+.mono { background: #f0ebfb; color: #50378d; }
+.privacy-panel { background: #f0ebfb; border-color: #e1d7f7; }
+.privacy-icon { background: #7656dc; }
+.privacy-panel b { color: #50378d; }
+.site-footer { border-top-color: #e8e1f4; }
+.site-footer strong { color: #50378d; }
+@media (max-width: 760px) {
+  .main-nav .nav-tab.active { background: #6d4aff; }
+}
