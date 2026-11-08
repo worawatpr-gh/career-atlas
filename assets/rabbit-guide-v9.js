@@ -18,7 +18,7 @@ function initRabbit(){
  '#ca-rabbit-trigger .ca-rabbit-fallback{display:none;position:absolute;inset:0;place-items:center;font-size:68px}',
  '#ca-rabbit-caption{max-width:190px!important;margin:0 0 70px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #e6dcf7!important;border-radius:13px 13px 2px 13px!important;color:#58427f!important;font-size:12px!important;line-height:1.5!important;box-shadow:0 4px 14px rgba(56,35,107,.12)!important;pointer-events:none!important}',
  '#ca-rabbit-panel{display:none;width:min(340px,calc(100vw - 130px))!important;max-height:65vh!important;overflow:auto!important;background:#fff!important;border:1px solid #e5dcf8!important;border-radius:18px!important;box-shadow:0 12px 38px rgba(40,24,76,.22)!important;padding:16px!important;color:#302744!important;position:relative!important;pointer-events:auto!important}',
- '#ca-rabbit.open #ca-rabbit-panel{display:block!important;animation:ca-panel-in .22s ease-out both}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
+ '#ca-rabbit.open{flex-direction:column!important;align-items:flex-end!important;gap:8px!important}#ca-rabbit.ca-edge-left.open{align-items:flex-start!important}#ca-rabbit.open #ca-rabbit-panel{display:block!important;animation:ca-panel-in .22s ease-out both}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
  '@keyframes ca-panel-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}',
  '#ca-rabbit.ca-bounce #ca-rabbit-trigger{animation:ca-rabbit-pop .55s ease-in-out 1}',
  '@keyframes ca-rabbit-pop{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-5deg)}60%{transform:translateY(1px) rotate(4deg)}80%{transform:translateY(-3px) rotate(-2deg)}}',
@@ -35,11 +35,25 @@ function initRabbit(){
  const img=root.querySelector('img');img.src=new URL('rabbit-3d.png',scriptUrl).href;
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
- function home(){root.classList.remove('open','ca-bounce');}
+ function home(){
+  const triggerEl=root.querySelector('#ca-rabbit-trigger');
+  const triggerRect=triggerEl.getBoundingClientRect();
+  root.classList.remove('open','ca-bounce');
+  root.style.setProperty('top',triggerRect.top+'px','important');
+  root.style.setProperty('bottom','auto','important');
+ }
+ function positionPanelAboveRabbit(){
+  const triggerEl=root.querySelector('#ca-rabbit-trigger');
+  const triggerRect=triggerEl.getBoundingClientRect();
+  const rootRect=root.getBoundingClientRect();
+  // Keep the rabbit fixed while the explanation panel expands upward.
+  root.style.setProperty('top',Math.max(0,triggerRect.bottom-rootRect.height)+'px','important');
+  root.style.setProperty('bottom','auto','important');
+ }
  function explain(heading,description,tip,target){
   title.textContent=heading;body.replaceChildren();const p=document.createElement('p');p.textContent=description;body.appendChild(p);
   const box=document.createElement('div');box.className='ca-tip';box.textContent='คำแนะนำ: '+tip;body.appendChild(box);
-  root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;root.classList.add('ca-bounce');
+  root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;positionPanelAboveRabbit();root.classList.add('ca-bounce');
  }
  const trigger=root.querySelector('#ca-rabbit-trigger');
  let dragState=null, dragged=false, suppressClick=false, suppressTimer=null;
