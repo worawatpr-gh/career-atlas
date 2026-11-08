@@ -429,3 +429,52 @@ tbody tr:hover {background:#faf7ff}
 @media(max-width:560px){
   .page-shell{padding-left:16px !important;padding-right:16px !important;}
 }
+
+
+/* ===== Unified horizontal alignment v11 =====
+   Header, navigation, dashboard cards, charts and footer share one centered grid. */
+.site-header .header-inner {
+  width: 100% !important;
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+.main-nav {
+  width: 100% !important;
+  max-width: none !important;
+  box-sizing: border-box !important;
+  margin: 0 0 22px !important;
+  padding: 9px max(40px, calc((100vw - 1520px) / 2)) 11px !important;
+  gap: 10px !important;
+}
+.main-nav .nav-tab {
+  flex: 1 1 0 !important;
+  min-width: max-content !important;
+  justify-content: center !important;
+}
+.page-shell {
+  width: 100% !important;
+  max-width: 1600px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 40px !important;
+  padding-right: 40px !important;
+}
+.page-shell > .tab-panel,
+.page-shell > .site-footer {
+  width: 100%;
+  min-width: 0;
+}
+@media (max-width: 900px) {
+  .site-header .header-inner { padding-left: 26px !important; padding-right: 26px !important; }
+  .main-nav { padding-left: 26px !important; padding-right: 26px !important; gap: 6px !important; }
+  .main-nav .nav-tab { flex: 0 0 auto !important; }
+  .page-shell { padding-left: 26px !important; padding-right: 26px !important; }
+}
+@media (max-width: 560px) {
+  .site-header .header-inner { padding-left: 16px !important; padding-right: 16px !important; }
+  .main-nav { padding: 8px 16px !important; margin-bottom: 18px !important; }
+  .page-shell { padding-left: 16px !important; padding-right: 16px !important; }
+}
