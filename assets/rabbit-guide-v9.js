@@ -18,7 +18,7 @@ function initRabbit(){
  '#ca-rabbit-trigger .ca-rabbit-fallback{display:none;position:absolute;inset:0;place-items:center;font-size:68px}',
  '#ca-rabbit-caption{max-width:190px!important;margin:0 0 70px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #e6dcf7!important;border-radius:13px 13px 2px 13px!important;color:#58427f!important;font-size:12px!important;line-height:1.5!important;box-shadow:0 4px 14px rgba(56,35,107,.12)!important;pointer-events:none!important}',
  '#ca-rabbit-panel{display:none;width:min(340px,calc(100vw - 130px))!important;max-height:65vh!important;overflow:auto!important;background:#fff!important;border:1px solid #e5dcf8!important;border-radius:18px!important;box-shadow:0 12px 38px rgba(40,24,76,.22)!important;padding:16px!important;color:#302744!important;position:relative!important;pointer-events:auto!important}',
- '#ca-rabbit{position:fixed!important}#ca-rabbit.open #ca-rabbit-panel{display:block!important;position:absolute!important;bottom:calc(100% + 8px)!important;right:0!important;left:auto!important;margin:0!important;animation:ca-panel-in .22s ease-out both}#ca-rabbit.ca-edge-left.open #ca-rabbit-panel{left:0!important;right:auto!important}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
+ '#ca-rabbit{position:fixed!important}#ca-rabbit.open #ca-rabbit-panel{display:block!important;position:fixed!important;right:auto!important;bottom:auto!important;left:12px!important;top:12px!important;margin:0!important;max-width:calc(100vw - 24px)!important;animation:ca-panel-in .22s ease-out both}#ca-rabbit.open #ca-rabbit-caption{display:none!important}',
  '@keyframes ca-panel-in{from{opacity:0;transform:translateY(8px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}',
  '#ca-rabbit.ca-bounce #ca-rabbit-trigger{animation:ca-rabbit-pop .55s ease-in-out 1}',
  '@keyframes ca-rabbit-pop{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-5deg)}60%{transform:translateY(1px) rotate(4deg)}80%{transform:translateY(-3px) rotate(-2deg)}}',
@@ -36,10 +36,29 @@ function initRabbit(){
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
  function home(){root.classList.remove('open','ca-bounce');}
+ function positionPanel(){
+  if(!root.classList.contains('open'))return;
+  const panel=root.querySelector('#ca-rabbit-panel');
+  const rr=root.getBoundingClientRect(),gap=10,pad=12;
+  const pr=panel.getBoundingClientRect();
+  const above=rr.top-pad-gap,below=innerHeight-rr.bottom-pad-gap;
+  let top;
+  if(above>=pr.height)top=rr.top-gap-pr.height;
+  else if(below>=pr.height)top=rr.bottom+gap;
+  else if(below>above)top=rr.bottom+gap;
+  else top=rr.top-gap-pr.height;
+  top=clamp(top,pad,Math.max(pad,innerHeight-pr.height-pad));
+  let left;
+  if(rr.left+rr.width/2>innerWidth/2)left=rr.right-pr.width;
+  else left=rr.left;
+  left=clamp(left,pad,Math.max(pad,innerWidth-pr.width-pad));
+  panel.style.setProperty('left',left+'px','important');
+  panel.style.setProperty('top',top+'px','important');
+ }
  function explain(heading,description,tip,target){
   title.textContent=heading;body.replaceChildren();const p=document.createElement('p');p.textContent=description;body.appendChild(p);
   const box=document.createElement('div');box.className='ca-tip';box.textContent='คำแนะนำ: '+tip;body.appendChild(box);
-  root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;root.classList.add('ca-bounce');
+  root.classList.add('open');root.classList.remove('ca-bounce');positionPanel();requestAnimationFrame(positionPanel);root.classList.add('ca-bounce');
  }
  const trigger=root.querySelector('#ca-rabbit-trigger');
  let dragState=null, dragged=false, suppressClick=false, suppressTimer=null;
@@ -86,10 +105,10 @@ function initRabbit(){
   root.classList.add('ca-edge-'+side,'ca-snapping');
   let left=clamp(rect.left,0,Math.max(0,innerWidth-rect.width));
   let top=clamp(rect.top,0,Math.max(0,innerHeight-rect.height));
-  if(edge==='left')left=0;
-  if(edge==='right')left=Math.max(0,innerWidth-rect.width);
-  if(edge==='top')top=0;
-  if(edge==='bottom')top=Math.max(0,innerHeight-rect.height);
+  if(edge==='left')left=12;
+  if(edge==='right')left=Math.max(12,innerWidth-rect.width-12);
+  if(edge==='top')top=12;
+  if(edge==='bottom')top=Math.max(12,innerHeight-rect.height-12);
   root.style.setProperty('left',left+'px','important');
   root.style.setProperty('top',top+'px','important');
   root.style.setProperty('right','auto','important');
@@ -97,6 +116,7 @@ function initRabbit(){
   setTimeout(()=>root.classList.remove('ca-snapping'),400);
   suppressTimer=setTimeout(()=>{suppressClick=false;},250);
  }
+ window.addEventListener('resize',positionPanel);
  window.addEventListener('pointerup',finishDrag);
  window.addEventListener('pointercancel',finishDrag);
  trigger.addEventListener('click',()=>{if(suppressClick)return;if(root.classList.contains('open'))home();else explain('ผู้ช่วยนักสำรวจข้อมูล','ฉันช่วยอธิบายข้อมูล กราฟ และตัวกรองใน Career Atlas ได้','เลือกการ์ดหรือเมนูที่ต้องการให้ช่วยอธิบาย',null);});
