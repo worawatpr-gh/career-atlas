@@ -42,45 +42,60 @@ function initRabbit(){
   root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;root.classList.add('ca-bounce');
  }
  const trigger=root.querySelector('#ca-rabbit-trigger');
- let dragState=null, dragged=false, suppressClick=false;
+ let dragState=null, dragged=false, suppressClick=false, suppressTimer=null;
  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
  trigger.addEventListener('pointerdown',event=>{
   if(event.button!==0)return;
   const rect=root.getBoundingClientRect();
-  dragState={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,left:rect.left,top:rect.top};
-  dragged=false;trigger.setPointerCapture?.(event.pointerId);
+  dragState={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,left:rect.left,top:rect.top,width:rect.width,height:rect.height};
+  dragged=false;
+  if(suppressTimer)clearTimeout(suppressTimer);
+  event.preventDefault();
+  event.stopPropagation();
  });
- trigger.addEventListener('pointermove',event=>{
+ window.addEventListener('pointermove',event=>{
   if(!dragState||event.pointerId!==dragState.pointerId)return;
   const dx=event.clientX-dragState.startX,dy=event.clientY-dragState.startY;
-  if(!dragged&&(Math.abs(dx)>5||Math.abs(dy)>5)){dragged=true;root.classList.add('ca-dragging');root.classList.remove('ca-snapping');root.style.setProperty('right','auto','important');root.style.setProperty('bottom','auto','important');root.style.setProperty('left',dragState.left+'px','important');root.style.setProperty('top',dragState.top+'px','important');}
+  if(!dragged&&(Math.abs(dx)>4||Math.abs(dy)>4)){
+   dragged=true;
+   root.classList.add('ca-dragging');
+   root.classList.remove('ca-snapping');
+   root.style.setProperty('right','auto','important');
+   root.style.setProperty('bottom','auto','important');
+   root.style.setProperty('left',dragState.left+'px','important');
+   root.style.setProperty('top',dragState.top+'px','important');
+  }
   if(!dragged)return;
-  const rect=root.getBoundingClientRect();
-  root.style.setProperty('left',clamp(dragState.left+dx,0,Math.max(0,innerWidth-rect.width))+'px','important');
-  root.style.setProperty('top',clamp(dragState.top+dy,0,Math.max(0,innerHeight-rect.height))+'px','important');
- });
+  event.preventDefault();
+  root.style.setProperty('left',clamp(dragState.left+dx,0,Math.max(0,innerWidth-dragState.width))+'px','important');
+  root.style.setProperty('top',clamp(dragState.top+dy,0,Math.max(0,innerHeight-dragState.height))+'px','important');
+ },{passive:false});
  function finishDrag(event){
   if(!dragState||event.pointerId!==dragState.pointerId)return;
-  const wasDragged=dragged;dragState=null;
-  if(!wasDragged)return;
-  suppressClick=true;root.classList.remove('ca-dragging');
+  const state=dragState;dragState=null;
+  if(!dragged)return;
+  suppressClick=true;
+  root.classList.remove('ca-dragging');
   const rect=root.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
   const distances=[{edge:'left',d:cx},{edge:'right',d:innerWidth-cx},{edge:'top',d:cy},{edge:'bottom',d:innerHeight-cy}].sort((a,b)=>a.d-b.d);
   const edge=distances[0].edge;
   root.classList.remove('ca-edge-left','ca-edge-right','ca-edge-top','ca-edge-bottom');
   root.classList.add('ca-edge-'+edge,'ca-snapping');
-  const w=rect.width,h=rect.height;
-  let left=clamp(rect.left,0,Math.max(0,innerWidth-w)),top=clamp(rect.top,0,Math.max(0,innerHeight-h));
+  let left=clamp(rect.left,0,Math.max(0,innerWidth-rect.width));
+  let top=clamp(rect.top,0,Math.max(0,innerHeight-rect.height));
   if(edge==='left')left=0;
-  if(edge==='right')left=Math.max(0,innerWidth-w);
+  if(edge==='right')left=Math.max(0,innerWidth-rect.width);
   if(edge==='top')top=0;
-  if(edge==='bottom')top=Math.max(0,innerHeight-h);
-  root.style.setProperty('left',left+'px','important');root.style.setProperty('top',top+'px','important');root.style.setProperty('right','auto','important');root.style.setProperty('bottom','auto','important');
-  setTimeout(()=>root.classList.remove('ca-snapping'),380);
-  setTimeout(()=>{suppressClick=false;},80);
+  if(edge==='bottom')top=Math.max(0,innerHeight-rect.height);
+  root.style.setProperty('left',left+'px','important');
+  root.style.setProperty('top',top+'px','important');
+  root.style.setProperty('right','auto','important');
+  root.style.setProperty('bottom','auto','important');
+  setTimeout(()=>root.classList.remove('ca-snapping'),400);
+  suppressTimer=setTimeout(()=>{suppressClick=false;},250);
  }
- trigger.addEventListener('pointerup',finishDrag);
- trigger.addEventListener('pointercancel',finishDrag);
+ window.addEventListener('pointerup',finishDrag);
+ window.addEventListener('pointercancel',finishDrag);
  trigger.addEventListener('click',()=>{if(suppressClick)return;if(root.classList.contains('open'))home();else explain('ผู้ช่วยนักสำรวจข้อมูล','ฉันช่วยอธิบายข้อมูล กราฟ และตัวกรองใน Career Atlas ได้','เลือกการ์ดหรือเมนูที่ต้องการให้ช่วยอธิบาย',null);});
  root.querySelector('.ca-close').addEventListener('click',home);
  const cardSelector='.metric-card,.welcome-stat,.overview-card,.model-card,.about-card,.insight-note,.method-grid>div,.summary-band,.chart-card,.table-card';
