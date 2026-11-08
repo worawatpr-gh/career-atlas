@@ -155,7 +155,19 @@ function initRabbit(){
  [/คำถามหลักของโครงการ/i,'คำถามหลักของโครงการ','ตรวจสอบว่าโครงสร้างอาชีพของไทยแตกต่างจากประเทศอื่นหรือไม่ และเปลี่ยนแปลงตามเวลาอย่างไร','ตั้งสมมติฐานก่อนดูกราฟ แล้วตรวจสอบด้วยหลักฐาน']
  ];
  const textOf=el=>(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
- function explainCard(card){const text=textOf(card),rule=rules.find(item=>item[0].test(text));if(rule)explain(rule[1],rule[2],rule[3],card);else{const h=card.querySelector('h1,h2,h3,h4,strong,.metric-label,.card-index,.table-heading');explain(h?textOf(h):'ข้อมูลที่เลือก',text.slice(0,260)||'ส่วนนี้แสดงข้อมูลประกอบการสำรวจอาชีพ','สังเกตตัวเลข หน่วย ช่วงเวลา และตัวกรองก่อนสรุปผล',card);}}
+ function explainCard(card){
+  const text=textOf(card),rule=rules.find(item=>item[0].test(text));
+  if(rule){explain(rule[1],rule[2],rule[3],card);return;}
+  // Chart cards in Ranking/Fingerprint/Evolution use labels or their tab heading,
+  // rather than h1-h4 elements inside the card itself.
+  const panel=card.closest('.tab-panel');
+  const heading=card.querySelector('h1,h2,h3,h4,.chart-label,.metric-label,.card-index,.table-heading,strong')
+   ||panel?.querySelector('.section-heading h2')
+   ||panel?.querySelector('.section-heading .section-kicker');
+  const headingText=heading?textOf(heading):'ส่วนข้อมูลที่เลือก';
+  const description=text.slice(0,260)||'ส่วนนี้แสดงข้อมูลประกอบการสำรวจอาชีพ';
+  explain(headingText,description,'สังเกตชื่อกราฟ แกน หน่วย ช่วงเวลา และตัวกรองก่อนสรุปผล',card);
+ }
  document.addEventListener('click',event=>{
   const nav=event.target.closest('.nav-tab');if(nav){const name=textOf(nav);explain(name,'หน้านี้แสดงข้อมูลในหัวข้อ '+name,'อ่านชื่อกราฟและตัวกรองก่อนเริ่มตีความ',nav);return;}
   const card=event.target.closest(cardSelector);if(card&&!event.target.closest('button,a,select,input,textarea'))explainCard(card);
