@@ -157,34 +157,29 @@ function initRabbit(){
  const textOf=el=>(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
  function explainCard(card){
   const text=textOf(card);
-  const panel=card.closest('.tab-panel');
-  const panelId=panel?.id||'';
-  // These three chart tabs must always use their own section title.
-  // Do this before generic text rules because chart SVG labels can accidentally
-  // contain words that match unrelated rules.
-  const chartTabTitles={
-   'panel-ranking':'Career Ranking',
-   'panel-fingerprint':'Country Fingerprint',
-   'panel-evolution':'Career Evolution'
-  };
-  if(chartTabTitles[panelId]){
-   const heading=panel.querySelector('.section-heading h2');
-   const headingText=heading?textOf(heading):chartTabTitles[panelId];
-   const chartLabel=card.querySelector('.chart-label');
-   const detail=chartLabel?textOf(chartLabel):headingText;
-   const description=panel.querySelector('.section-heading p')?.textContent?.trim()
-    ||('กราฟ '+detail+' แสดงข้อมูลในหัวข้อ '+headingText);
-   explain(headingText,description,'อ่านชื่อกราฟ แกน หน่วย ช่วงเวลา และตัวกรองประกอบกันก่อนสรุปผล',card);
-   return;
+  // Read the title from the card that was actually clicked, never from its tab.
+  // Plotly chart titles are rendered dynamically as SVG text (.gtitle).
+  const ownTitle=card.querySelector(
+   '.chart-label,.table-heading h3,.metric-label,.card-index,h1,h2,h3,h4,b,strong,.gtitle'
+  );
+  let headingText=ownTitle?textOf(ownTitle):'';
+  if(!headingText){
+   const plotTitle=card.querySelector('.js-plotly-plot .gtitle');
+   if(plotTitle)headingText=textOf(plotTitle);
   }
+  // Chart cards without an explicit HTML heading (e.g. Career Evolution)
+  // use their own chart's Plotly title, with a card-specific fallback.
+  if(!headingText&&card.classList.contains('chart-card')){
+   const plotTitle=card.querySelector('.gtitle');
+   headingText=plotTitle?textOf(plotTitle):'กราฟข้อมูลอาชีพ';
+  }
+  if(!headingText)headingText='รายละเอียดในการ์ด';
   const rule=rules.find(item=>item[0].test(text));
-  if(rule){explain(rule[1],rule[2],rule[3],card);return;}
-  const heading=card.querySelector('h1,h2,h3,h4,.chart-label,.metric-label,.card-index,.table-heading,strong')
-   ||panel?.querySelector('.section-heading h2')
-   ||panel?.querySelector('.section-heading .section-kicker');
-  const headingText=heading?textOf(heading):'ส่วนข้อมูลที่เลือก';
-  const description=text.slice(0,260)||'ส่วนนี้แสดงข้อมูลประกอบการสำรวจอาชีพ';
-  explain(headingText,description,'สังเกตชื่อกราฟ แกน หน่วย ช่วงเวลา และตัวกรองก่อนสรุปผล',card);
+  const description=text||'การ์ดนี้แสดงข้อมูลประกอบการสำรวจโครงสร้างอาชีพ';
+  const tip=card.classList.contains('chart-card')
+   ?'อ่านชื่อกราฟ แกน หน่วย และคำอธิบายสัญลักษณ์ก่อนเปรียบเทียบข้อมูล'
+   :'อ่านหัวข้อและข้อความภายในการ์ด แล้วพิจารณาว่าข้อมูลนี้สนับสนุนข้อค้นพบอย่างไร';
+  explain(headingText,rule?rule[1]+' — '+rule[2]:description.slice(0,420),rule?rule[3]:tip,card);
  }
  document.addEventListener('click',event=>{
   const nav=event.target.closest('.nav-tab');if(nav){const name=textOf(nav);explain(name,'หน้านี้แสดงข้อมูลในหัวข้อ '+name,'อ่านชื่อกราฟและตัวกรองก่อนเริ่มตีความ',nav);return;}
