@@ -12,7 +12,8 @@ function initRabbit(){
  css.textContent=[
  '#ca-rabbit{position:fixed!important;right:16px!important;bottom:12px!important;left:auto!important;top:auto!important;z-index:2147483647!important;display:flex!important;align-items:flex-end!important;gap:9px!important;font-family:Inter,"Noto Sans Thai",sans-serif!important;pointer-events:none!important;visibility:visible!important;opacity:1!important}',
  '#ca-rabbit *{box-sizing:border-box}',
- '#ca-rabbit-trigger{position:relative!important;display:grid!important;place-items:center!important;flex:0 0 92px!important;width:92px!important;height:112px!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;cursor:pointer!important;pointer-events:auto!important}',
+ '#ca-rabbit-trigger{position:relative!important;display:grid!important;place-items:center!important;flex:0 0 92px!important;width:92px!important;height:112px!important;padding:0!important;margin:0!important;border:0!important;background:transparent!important;box-shadow:none!important;cursor:grab!important;touch-action:none!important;user-select:none!important;pointer-events:auto!important}',
+ '#ca-rabbit.ca-dragging{transition:none!important;user-select:none!important}#ca-rabbit.ca-dragging #ca-rabbit-trigger{cursor:grabbing!important;animation:none!important}#ca-rabbit.ca-snapping{transition:left .32s cubic-bezier(.2,.8,.2,1),top .32s cubic-bezier(.2,.8,.2,1)!important}#ca-rabbit.ca-edge-left{flex-direction:row-reverse!important}#ca-rabbit.ca-edge-right{flex-direction:row!important}#ca-rabbit.ca-edge-top{align-items:flex-start!important}#ca-rabbit.ca-edge-bottom{align-items:flex-end!important}',
  '#ca-rabbit-trigger img{display:block!important;width:100%!important;height:100%!important;object-fit:contain!important;filter:drop-shadow(0 5px 8px rgba(50,12,101,.22))!important}',
  '#ca-rabbit-trigger .ca-rabbit-fallback{display:none;position:absolute;inset:0;place-items:center;font-size:68px}',
  '#ca-rabbit-caption{max-width:190px!important;margin:0 0 70px!important;padding:9px 12px!important;background:#fff!important;border:1px solid #e6dcf7!important;border-radius:13px 13px 2px 13px!important;color:#58427f!important;font-size:12px!important;line-height:1.5!important;box-shadow:0 4px 14px rgba(56,35,107,.12)!important;pointer-events:none!important}',
@@ -30,6 +31,7 @@ function initRabbit(){
  ].join('\n');
  document.head.appendChild(css);
  root.style.cssText+=';position:fixed!important;right:16px!important;bottom:12px!important;left:auto!important;top:auto!important;z-index:2147483647!important;display:flex!important;visibility:visible!important;opacity:1!important;pointer-events:none!important;';
+ root.classList.remove('ca-edge-left','ca-edge-right','ca-edge-top','ca-edge-bottom');
  const img=root.querySelector('img');img.src=new URL('rabbit-3d.png',scriptUrl).href;
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
@@ -39,7 +41,47 @@ function initRabbit(){
   const box=document.createElement('div');box.className='ca-tip';box.textContent='คำแนะนำ: '+tip;body.appendChild(box);
   root.classList.add('open');root.classList.remove('ca-bounce');void root.offsetWidth;root.classList.add('ca-bounce');
  }
- root.querySelector('#ca-rabbit-trigger').addEventListener('click',()=>{if(root.classList.contains('open'))home();else explain('ผู้ช่วยนักสำรวจข้อมูล','ฉันช่วยอธิบายข้อมูล กราฟ และตัวกรองใน Career Atlas ได้','เลือกการ์ดหรือเมนูที่ต้องการให้ช่วยอธิบาย',null);});
+ const trigger=root.querySelector('#ca-rabbit-trigger');
+ let dragState=null, dragged=false, suppressClick=false;
+ const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
+ trigger.addEventListener('pointerdown',event=>{
+  if(event.button!==0)return;
+  const rect=root.getBoundingClientRect();
+  dragState={pointerId:event.pointerId,startX:event.clientX,startY:event.clientY,left:rect.left,top:rect.top};
+  dragged=false;trigger.setPointerCapture?.(event.pointerId);
+ });
+ trigger.addEventListener('pointermove',event=>{
+  if(!dragState||event.pointerId!==dragState.pointerId)return;
+  const dx=event.clientX-dragState.startX,dy=event.clientY-dragState.startY;
+  if(!dragged&&(Math.abs(dx)>5||Math.abs(dy)>5)){dragged=true;root.classList.add('ca-dragging');root.classList.remove('ca-snapping');root.style.right='auto';root.style.bottom='auto';root.style.left=dragState.left+'px';root.style.top=dragState.top+'px';}
+  if(!dragged)return;
+  const rect=root.getBoundingClientRect();
+  root.style.left=clamp(dragState.left+dx,0,Math.max(0,innerWidth-rect.width))+'px';
+  root.style.top=clamp(dragState.top+dy,0,Math.max(0,innerHeight-rect.height))+'px';
+ });
+ function finishDrag(event){
+  if(!dragState||event.pointerId!==dragState.pointerId)return;
+  const wasDragged=dragged;dragState=null;
+  if(!wasDragged)return;
+  suppressClick=true;root.classList.remove('ca-dragging');
+  const rect=root.getBoundingClientRect(),cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
+  const distances=[{edge:'left',d:cx},{edge:'right',d:innerWidth-cx},{edge:'top',d:cy},{edge:'bottom',d:innerHeight-cy}].sort((a,b)=>a.d-b.d);
+  const edge=distances[0].edge;
+  root.classList.remove('ca-edge-left','ca-edge-right','ca-edge-top','ca-edge-bottom');
+  root.classList.add('ca-edge-'+edge,'ca-snapping');
+  const w=rect.width,h=rect.height;
+  let left=clamp(rect.left,0,Math.max(0,innerWidth-w)),top=clamp(rect.top,0,Math.max(0,innerHeight-h));
+  if(edge==='left')left=0;
+  if(edge==='right')left=Math.max(0,innerWidth-w);
+  if(edge==='top')top=0;
+  if(edge==='bottom')top=Math.max(0,innerHeight-h);
+  root.style.left=left+'px';root.style.top=top+'px';root.style.right='auto';root.style.bottom='auto';
+  setTimeout(()=>root.classList.remove('ca-snapping'),380);
+  setTimeout(()=>{suppressClick=false;},80);
+ }
+ trigger.addEventListener('pointerup',finishDrag);
+ trigger.addEventListener('pointercancel',finishDrag);
+ trigger.addEventListener('click',()=>{if(suppressClick)return;if(root.classList.contains('open'))home();else explain('ผู้ช่วยนักสำรวจข้อมูล','ฉันช่วยอธิบายข้อมูล กราฟ และตัวกรองใน Career Atlas ได้','เลือกการ์ดหรือเมนูที่ต้องการให้ช่วยอธิบาย',null);});
  root.querySelector('.ca-close').addEventListener('click',home);
  const cardSelector='.metric-card,.welcome-stat,.overview-card,.model-card,.about-card,.insight-note,.method-grid>div,.summary-band,.chart-card,.table-card';
  const rules=[
