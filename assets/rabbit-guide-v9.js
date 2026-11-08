@@ -35,7 +35,21 @@ function initRabbit(){
  const img=root.querySelector('img');img.src=new URL('rabbit-3d.png',scriptUrl).href;
  img.addEventListener('error',()=>{img.style.display='none';root.querySelector('.ca-rabbit-fallback').style.display='grid';},{once:true});
  const title=root.querySelector('#ca-rabbit-title'),body=root.querySelector('#ca-rabbit-body');
- function home(){root.classList.remove('open','ca-bounce');}
+ function home(){
+  root.classList.remove('open','ca-bounce');
+  // Closing restores the caption and increases the widget height; re-clamp it
+  // so the rabbit and caption remain fully inside the viewport.
+  requestAnimationFrame(()=>{
+   const rect=root.getBoundingClientRect(),pad=innerWidth<=640?18:24;
+   const side=root.classList.contains('ca-edge-left')?'left':'right';
+   const left=side==='left'?pad:Math.max(pad,innerWidth-rect.width-pad);
+   const top=clamp(rect.top,16,Math.max(16,innerHeight-rect.height-16));
+   root.style.setProperty('left',left+'px','important');
+   root.style.setProperty('top',top+'px','important');
+   root.style.setProperty('right','auto','important');
+   root.style.setProperty('bottom','auto','important');
+  });
+ }
  function positionPanel(){
   if(!root.classList.contains('open'))return;
   const panel=root.querySelector('#ca-rabbit-panel');
@@ -107,10 +121,11 @@ function initRabbit(){
   root.classList.add('ca-edge-'+side,'ca-snapping');
   let left=clamp(rect.left,0,Math.max(0,innerWidth-rect.width));
   let top=clamp(rect.top,0,Math.max(0,innerHeight-rect.height));
-  if(edge==='left')left=12;
-  if(edge==='right')left=Math.max(12,innerWidth-rect.width-12);
-  if(edge==='top')top=12;
-  if(edge==='bottom')top=Math.max(12,innerHeight-rect.height-12);
+  const edgePad=innerWidth<=640?18:24;
+  if(edge==='left')left=edgePad;
+  if(edge==='right')left=Math.max(edgePad,innerWidth-rect.width-edgePad);
+  if(edge==='top')top=16;
+  if(edge==='bottom')top=Math.max(16,innerHeight-rect.height-16);
   root.style.setProperty('left',left+'px','important');
   root.style.setProperty('top',top+'px','important');
   root.style.setProperty('right','auto','important');
