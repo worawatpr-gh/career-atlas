@@ -85,3 +85,183 @@ tbody tr:hover { background: #faf8ff; }
 #panel-overview .metrics-grid .metric-card.metric-blue { background: #7fb8c1 !important; }
 #panel-overview .metrics-grid .metric-card.metric-yellow { background: #f1d68b !important; }
 #panel-overview .metrics-grid .metric-card.metric-green { background: #72c9a6 !important; }
+
+
+/* ===== Career Atlas: Enchanted Purple Observatory =====
+   Visual-only redesign inspired by the supplied reference.
+   Existing tabs, data, chart logic and category card colors are preserved. */
+:root {
+  --ink:#30234e; --muted:#81739d; --navy:#35106f; --navy2:#4c1d91;
+  --blue:#7435f4; --teal:#9b70ff; --amber:#c8a7ff;
+  --paper:#f7f2ff; --line:#e9ddfb; --card:#fff; --soft:#f0e6ff;
+  --shadow:0 10px 28px rgba(67,28,125,.09);
+}
+body {
+  background:
+    radial-gradient(ellipse at 12% 8%,rgba(219,196,255,.30),transparent 32%),
+    radial-gradient(ellipse at 90% 22%,rgba(232,213,255,.34),transparent 30%),
+    linear-gradient(180deg,#f8f4ff 0%,#f4efff 54%,#faf8ff 100%);
+  color:#382957;
+}
+.site-header {
+  position:relative; isolation:isolate; overflow:hidden;
+  background:
+    radial-gradient(circle at 67% 22%,rgba(255,224,180,.95) 0 2px,transparent 3px),
+    radial-gradient(circle at 67% 22%,#fff0c9 0 23px,#e5b9ff 24px,#9d5ee8 28px,transparent 29px),
+    radial-gradient(ellipse at 70% 110%,rgba(185,107,255,.46),transparent 36%),
+    linear-gradient(105deg,#21054f 0%,#3b087d 48%,#21044f 100%);
+  box-shadow:0 5px 22px rgba(40,8,82,.2);
+}
+.site-header:before {
+  content:""; position:absolute; z-index:-1; inset:0;
+  opacity:.38;
+  background:
+    radial-gradient(2px 2px at 8% 25%,#fff 98%,transparent),
+    radial-gradient(2px 2px at 18% 68%,#e8d5ff 98%,transparent),
+    radial-gradient(1.5px 1.5px at 38% 18%,#fff 98%,transparent),
+    radial-gradient(2px 2px at 56% 54%,#fff 98%,transparent),
+    radial-gradient(2px 2px at 83% 30%,#fff 98%,transparent),
+    radial-gradient(1.5px 1.5px at 94% 70%,#fff 98%,transparent);
+}
+.site-header:after {
+  content:""; position:absolute; z-index:-1; left:25%; right:22%; bottom:0; height:82%;
+  opacity:.48;
+  background:
+    linear-gradient(to top,#160536 0 35%,transparent 36%) 0 100%/100% 100% no-repeat,
+    linear-gradient(to top,#160536 0 72%,transparent 73%) 8% 100%/5% 100% no-repeat,
+    linear-gradient(to top,#160536 0 92%,transparent 93%) 13% 100%/4% 100% no-repeat,
+    linear-gradient(to top,#160536 0 62%,transparent 63%) 19% 100%/7% 100% no-repeat,
+    linear-gradient(to top,#160536 0 100%,transparent 101%) 28% 100%/4% 100% no-repeat,
+    linear-gradient(to top,#160536 0 76%,transparent 77%) 35% 100%/6% 100% no-repeat,
+    linear-gradient(to top,#160536 0 94%,transparent 95%) 44% 100%/4% 100% no-repeat,
+    linear-gradient(to top,#160536 0 64%,transparent 65%) 53% 100%/7% 100% no-repeat,
+    linear-gradient(to top,#160536 0 88%,transparent 89%) 64% 100%/5% 100% no-repeat,
+    linear-gradient(to top,#160536 0 58%,transparent 59%) 75% 100%/7% 100% no-repeat,
+    linear-gradient(to top,#160536 0 90%,transparent 91%) 86% 100%/4% 100% no-repeat;
+  pointer-events:none;
+}
+.header-inner { position:relative; z-index:1; max-width:none; min-height:82px; padding:14px 28px; }
+.brand-mark {
+  width:48px;height:48px;border:0;border-radius:15px;
+  background:linear-gradient(145deg,#9a4bff,#5a20d4);
+  box-shadow:0 6px 18px rgba(12,0,40,.28);font-size:16px;
+}
+.brand-copy strong {font-size:16px;letter-spacing:1.3px}
+.brand-copy small {font-size:10px;color:#e2d2ff}
+.header-right {gap:14px}
+.access-pill {background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.14);border-radius:10px;padding:8px 12px}
+.source-link {background:rgba(255,255,255,.10);padding:8px 13px;border-radius:10px}
+.content-topbar {background:rgba(255,255,255,.76);backdrop-filter:blur(12px);border-bottom-color:#eee5fb}
+.main-nav {
+  position:sticky;top:0;z-index:30; gap:7px; padding:9px 16px 11px; margin:0 -20px 22px;
+  background:rgba(255,255,255,.86);backdrop-filter:blur(14px);
+  border-bottom:1px solid #e8dcfa;box-shadow:0 5px 18px rgba(67,28,125,.045);
+}
+.main-nav .nav-tab {padding:11px 15px;border-radius:12px;color:#6f5a91;font-size:11px;transition:all .2s ease}
+.main-nav .nav-tab:hover {background:#f1e8ff;color:#4a168e;transform:translateY(-1px)}
+.main-nav .nav-tab.active {background:linear-gradient(110deg,#9b39f5,#6728e8);border-color:transparent;box-shadow:0 6px 16px rgba(115,48,231,.25)}
+.dashboard-welcome {min-height:132px;padding:20px 4px 18px}
+.dashboard-welcome h1 {font-size:32px;font-weight:800;letter-spacing:-.8px;color:#37106f}
+.dashboard-welcome p {font-size:12px;color:#8b7aa8}
+.welcome-actions {gap:10px;margin-top:12px}
+.button {border-radius:11px;padding:10px 15px;font-size:11px}
+.button-primary {background:linear-gradient(110deg,#9b39f5,#6728e8);box-shadow:0 6px 15px rgba(115,48,231,.22)}
+.button-primary:hover {background:#5920ce;transform:translateY(-2px)}
+.button-secondary {border:1px solid #e3d6f7;color:#5b378b;background:#fff}
+.welcome-stats {gap:12px}
+.welcome-stat {
+  min-width:170px;padding:12px 15px;background:rgba(255,255,255,.9);
+  border:1px solid #eadff8;border-radius:13px;box-shadow:0 5px 18px rgba(62,29,111,.05)
+}
+.welcome-stat:last-child {border:1px solid #eadff8;padding-right:15px}
+.welcome-stat>span {color:#9a8bb1;font-size:9px;letter-spacing:1px}
+.welcome-stat strong {font-size:21px;color:#4a2b7a;font-weight:800}
+.welcome-stat small {font-size:9px;color:#9889ad}
+.metrics-grid {gap:14px;margin:0 0 26px}
+.metric-card {
+  min-height:128px;padding:17px 20px;border:0;border-radius:15px;
+  box-shadow:0 7px 18px rgba(48,20,91,.10);position:relative;overflow:hidden;
+  transition:transform .22s ease,box-shadow .22s ease;
+}
+.metric-card:hover {transform:translateY(-4px);box-shadow:0 12px 24px rgba(48,20,91,.16)}
+.metric-label {font-size:11px;color:rgba(255,255,255,.96)}
+.metric-card strong {font-size:31px;color:#fff;margin:5px 0}
+.metric-card small {font-size:10px;color:rgba(255,255,255,.92)}
+.metric-symbol {font-size:18px}
+.metric-watermark {opacity:.18}
+#panel-overview .metrics-grid .metric-card.metric-coral {background:linear-gradient(120deg,#ff8b76,#ff9c83)!important}
+#panel-overview .metrics-grid .metric-card.metric-blue {background:linear-gradient(120deg,#329be8,#54b5ef)!important}
+#panel-overview .metrics-grid .metric-card.metric-yellow {background:linear-gradient(120deg,#ffc94f,#ffdf79)!important}
+#panel-overview .metrics-grid .metric-card.metric-green {background:linear-gradient(120deg,#40c68d,#61d9a7)!important}
+.section-heading {margin:12px 0 18px}
+.section-heading h2 {color:#4b1c87}
+.section-heading p {color:#8979a3}
+.section-kicker,.eyebrow {color:#9b65df}
+.overview-grid {gap:15px}
+.overview-card,.about-card {
+  border:1px solid #e9def8;border-radius:16px;padding:21px 22px;
+  box-shadow:0 7px 22px rgba(59,25,110,.055);transition:transform .2s,box-shadow .2s
+}
+.overview-card:hover,.about-card:hover {transform:translateY(-2px);box-shadow:0 12px 25px rgba(59,25,110,.09)}
+.overview-card h3,.about-card h3 {color:#4b287d}
+.question-large {color:#50317f}
+.overview-dark {background:linear-gradient(145deg,#51209b,#35106f);border-color:#51209b;box-shadow:0 8px 24px rgba(55,16,111,.17)}
+.overview-dark .card-index {color:#d7c3ff}
+.overview-dark p {color:#eee4ff}
+.text-button {color:#f1d8ff}
+.feature-list li {border-bottom-color:#eee7f8}
+.feature-list b {color:#7629dd}
+.feature-list span {color:#88799e}
+.workflow-strip {background:linear-gradient(110deg,#f0e6ff,#faf7ff);border-color:#e7daf9;border-radius:16px;padding:19px 21px}
+.workflow-title h3 {color:#4c287e}
+.workflow-steps span {color:#76658e}
+.workflow-steps b {background:#dfceff;color:#5726a0}
+.control-bar,.chart-card,.table-card,.about-card,.privacy-panel {
+  border-color:#e9def8;border-radius:14px;box-shadow:0 7px 20px rgba(59,25,110,.045)
+}
+.control-bar select {border-color:#e1d5f1;border-radius:9px;background:#fcfaff}
+.control-bar select:focus {border-color:#9866ef;box-shadow:0 0 0 3px rgba(151,94,239,.13)}
+.chart-topline,.table-heading {border-bottom-color:#eee6f8}
+.insight-note {border-left-color:#9760e9;background:#f2ebff;color:#67557e}
+.insight-note b,.method-grid b,.table-heading h3 {color:#55218f}
+th {background:#f2ebff;color:#715a94}
+tbody tr:hover {background:#faf7ff}
+.summary-band,.method-grid div {background:#f2ebff;border-color:#e8dcfa;color:#6b5a82}
+.summary-band strong,.model-card strong,.inline-link {color:#772fe0}
+.site-footer {border-top-color:#e8dcf8}
+.site-footer strong {color:#51218e}
+#ca-rabbit {right:22px;bottom:14px;gap:12px}
+#ca-rabbit-trigger {width:176px;height:218px;filter:drop-shadow(0 12px 18px rgba(50,12,101,.28))}
+#ca-rabbit-caption {
+  max-width:230px;margin-bottom:115px;padding:13px 16px;border-radius:18px 18px 4px 18px;
+  border:1px solid #e6d5ff;background:rgba(255,255,255,.97);color:#59358d;
+  font-size:13px;line-height:1.6;box-shadow:0 8px 25px rgba(66,22,132,.13)
+}
+#ca-rabbit-panel {border:1px solid #e3d2ff;border-radius:20px;box-shadow:0 14px 38px rgba(48,12,96,.22)}
+#ca-rabbit-panel h3 {color:#5922a1}
+#ca-rabbit-panel .ca-tip {background:#f2eaff;color:#563187;border:1px solid #e7d9fb}
+@media(max-width:900px) {
+  .header-inner {padding:12px 18px}
+  .welcome-stats {gap:8px}
+  .welcome-stat {min-width:135px}
+  #ca-rabbit-trigger {width:132px;height:166px}
+  #ca-rabbit-caption {max-width:165px;margin-bottom:76px;font-size:11px}
+}
+@media(max-width:640px) {
+  .site-header:after {left:10%;right:8%;opacity:.22}
+  .header-inner {min-height:70px}
+  .brand-copy strong {font-size:13px}
+  .brand-copy small {font-size:8px}
+  .dashboard-welcome {display:block;padding:18px 0}
+  .dashboard-welcome h1 {font-size:27px}
+  .welcome-stats {margin-top:14px;display:grid;grid-template-columns:1fr 1fr}
+  .welcome-stat {min-width:0}
+  .main-nav {margin:0 -15px 18px;padding:8px 12px}
+  .metric-card {min-height:105px;padding:13px}
+  #ca-rabbit {right:8px;bottom:8px;gap:5px}
+  #ca-rabbit-trigger {width:96px;height:126px}
+  #ca-rabbit-caption {max-width:118px;margin-bottom:48px;padding:8px 10px;font-size:10px}
+}
+@media(prefers-reduced-motion:reduce) {
+  .metric-card,.overview-card,.about-card,.main-nav .nav-tab {transition:none}
+}
