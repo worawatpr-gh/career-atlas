@@ -406,11 +406,23 @@ def main() -> None:
             })
         testing_years = sorted(int(y) for y in bt["year"].unique())
         better_pct = float((bt["trendError"] < bt["naiveError"]).mean() * 100)
-        backtest_worst = (
+        worst_rows = (
             bt.sort_values("trendError", ascending=False)
             .head(5)[["code", "nameTh", "year", "actual", "trend", "naive", "trendError"]]
             .to_dict(orient="records")
         )
+        backtest_worst = [
+            {
+                "code": str(row["code"]),
+                "nameTh": str(row["nameTh"]),
+                "year": int(row["year"]),
+                "actual": float(row["actual"]),
+                "trend": float(row["trend"]),
+                "naive": float(row["naive"]),
+                "trendError": float(row["trendError"]),
+            }
+            for row in worst_rows
+        ]
 
     latest_shared_year = max(selected_years)
     coverage = (
