@@ -93,15 +93,18 @@
     $('metric-occupations').textContent = m.occupationCount;
     $('metric-thai').textContent = m.thaiOccupationCount;
     $('metric-thai-years').textContent = `${m.thaiOccupationCount} กลุ่มที่ไทยรายงาน · ${m.thaiYears[0]}–${m.thaiYears[1]}`;
-    $('snapshot-meta').textContent = `Snapshot ที่ใช้ในกิจกรรม: ${m.rawRows.toLocaleString('th-TH')} แถว · ${m.rawColumns} คอลัมน์ · พบ obs_value ที่หายไป ${m.missingObsValue} รายการ (ไม่นำมาตีความเป็นศูนย์) · แสดงค่าเฉลี่ย/แนวโน้มตามวิธีคำนวณใน Notebook`;
+    const studyPeriod = $('study-period');
+    if (studyPeriod) studyPeriod.textContent = `${m.thaiYears[0]}–${m.thaiYears[1]}`;
+    const updated = m.fetchedAt || m.updatedAt || 'ไม่ระบุเวลา';
+    $('snapshot-meta').textContent = `ข้อมูลดึงล่าสุด: ${updated} · Snapshot: ${m.rawRows.toLocaleString('th-TH')} แถว · ${m.rawColumns} คอลัมน์ · พบ obs_value ที่หายไป ${m.missingObsValue} รายการ (ไม่นำมาตีความเป็นศูนย์) · แสดงค่าเฉลี่ย/แนวโน้มตามวิธีคำนวณใน Notebook`;
   }
 
   function initRanking() {
     const countries = [...DATA.meta.countries].sort((a, b) => countryLabel(a).localeCompare(countryLabel(b), 'th'));
     fillSelect($('ranking-country'), countries.map(c => ({value: c, label: countryLabel(c)})), 'Thailand');
     fillSelect($('ranking-year'), DATA.meta.sharedYears.map(y => ({value: y, label: String(y)})), Math.max(...DATA.meta.sharedYears));
-    $('ranking-country').addEventListener('change', updateRanking);
-    $('ranking-year').addEventListener('change', updateRanking);
+    $('ranking-country').onchange = updateRanking;
+    $('ranking-year').onchange = updateRanking;
     updateRanking();
   }
 
@@ -156,7 +159,7 @@
       xaxis: {title: 'ประเทศ', side: 'bottom', tickangle: 0},
       yaxis: {title: '', autorange: 'reversed', automargin: true, tickfont: {size: 10}}
     });
-    Plotly.newPlot('fingerprint-chart', [trace], layout, plotConfig);
+    Plotly.react('fingerprint-chart', [trace], layout, plotConfig);
   }
 
   function linearFit(rows) {
@@ -176,7 +179,7 @@
     evolutionOptions = [...new Map(DATA.commonData.filter(r => r.sex === 'Sex: Total').map(r => [r.nameEn, {code: r.code, nameEn: r.nameEn, nameTh: r.nameTh}])).values()]
       .sort((a, b) => a.nameEn.localeCompare(b.nameEn, 'en'));
     fillSelect($('evolution-occupation'), evolutionOptions.map(o => ({value: o.code, label: `${o.code} — ${o.nameTh}`})), evolutionOptions[0]?.code);
-    $('evolution-occupation').addEventListener('change', updateEvolution);
+    $('evolution-occupation').onchange = updateEvolution;
     updateEvolution();
   }
 
@@ -242,7 +245,7 @@
     const layout = baseLayout({height: 900, margin: {l: 290, r: 35, t: 30, b: 70}, barmode: 'relative',
       xaxis: {title: 'สัดส่วนภายในกลุ่มเพศ (%) | ซ้าย: ชาย · ขวา: หญิง', ticksuffix: '%', zeroline: true, zerolinewidth: 2, gridcolor: '#edf1f5', range: [-maxValue * 1.08, maxValue * 1.08]},
       yaxis: {title: '', automargin: true, tickfont: {size: 10}}, legend: {orientation: 'h', y: -0.08}, hovermode: 'closest'});
-    Plotly.newPlot('gender-chart', [traceMale, traceFemale], layout, plotConfig);
+    Plotly.react('gender-chart', [traceMale, traceFemale], layout, plotConfig);
     const top = rows.slice().sort((a, b) => Math.abs(b.difference) - Math.abs(a.difference)).slice(0, 5);
     renderTable('gender-table', top, [
       {key: 'code'}, {key: 'nameTh'}, {render: r => thaiNumber(r.female)}, {render: r => thaiNumber(r.male)},
@@ -255,7 +258,7 @@
     DATA.thaiData.forEach(r => { if (!byCode.has(r.code)) byCode.set(r.code, r.nameTh); });
     const codes = [...byCode.keys()].sort((a, b) => a.localeCompare(b, 'en', {numeric: true}));
     fillSelect($('thailand-occupation'), codes.map(code => ({value: code, label: `${code} — ${byCode.get(code)}`})), byCode.has('25') ? '25' : codes[0]);
-    $('thailand-occupation').addEventListener('change', updateThailand);
+    $('thailand-occupation').onchange = updateThailand;
     updateThailand();
   }
 
@@ -291,21 +294,30 @@
     const layout = baseLayout({height: 350, barmode: 'group', margin: {l: 70, r: 30, t: 25, b: 60},
       xaxis: {title: 'ปีที่ทดสอบ'}, yaxis: {title: 'MAE (จุดเปอร์เซ็นต์) · ยิ่งต่ำยิ่งดี', rangemode: 'tozero', gridcolor: '#edf1f5'},
       legend: {orientation: 'h', y: -0.25}});
-    Plotly.newPlot('backtest-chart', [traceTrend, traceNaive], layout, plotConfig);
+    Plotly.react('backtest-chart', [traceTrend, traceNaive], layout, plotConfig);
     renderTable('backtest-table', DATA.meta.backtestWorst, [
       {key: 'code'}, {key: 'nameTh'}, {key: 'year'}, {render: r => thaiNumber(r.actual)},
       {render: r => thaiNumber(r.trend)}, {render: r => thaiNumber(r.naive)}
     ]);
   }
 
-  async function start() {
-    setupNavigation();
-    setActiveTab('overview');
+  async function loadData(manual = false) {
     const status = $('load-status');
+    const refreshButton = $('refresh-data');
+    if (refreshButton) {
+      refreshButton.disabled = true;
+      refreshButton.textContent = 'กำลังโหลด…';
+    }
+    status.textContent = manual ? 'กำลังโหลดข้อมูล Snapshot ล่าสุด…' : 'กำลังเตรียมข้อมูลสำหรับการสำรวจ…';
+    status.classList.remove('error');
     try {
-      const response = await fetch(DATA_URL, {cache: 'no-store'});
+      const response = await fetch(`${DATA_URL}?refresh=${Date.now()}`, {cache: 'no-store'});
       if (!response.ok) throw new Error(`โหลดไฟล์ข้อมูลไม่สำเร็จ (${response.status})`);
-      DATA = await response.json();
+      const nextData = await response.json();
+      if (!nextData.meta || !Array.isArray(nextData.commonData) || !Array.isArray(nextData.thaiData)) {
+        throw new Error('รูปแบบไฟล์ข้อมูลไม่ถูกต้อง');
+      }
+      DATA = nextData;
       window.CA_DATA = DATA;
       renderMetrics();
       initRanking();
@@ -314,13 +326,27 @@
       initGender();
       initThailand();
       initBacktest();
-      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${DATA.meta.commonRows.toLocaleString('th-TH')} แถวสำหรับเปรียบเทียบ · ${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวสำหรับเจาะลึกประเทศไทย`;
+      const updated = DATA.meta.fetchedAt ? ` · ดึงจาก ILOSTAT เมื่อ ${DATA.meta.fetchedAt}` : '';
+      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${DATA.meta.commonRows.toLocaleString('th-TH')} แถวสำหรับเปรียบเทียบ · ${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวสำหรับเจาะลึกประเทศไทย${updated}`;
       status.classList.remove('error');
     } catch (error) {
       console.error(error);
-      status.textContent = `เกิดปัญหาในการเปิดข้อมูล: ${error.message} · กรุณาตรวจว่ามีไฟล์ data/career_atlas_data.json และเปิดผ่านเว็บเซิร์ฟเวอร์หรือ GitHub Pages`;
+      status.textContent = `เกิดปัญหาในการเปิดข้อมูล: ${error.message} · กำลังคงข้อมูลเดิมไว้หากมี`;
       status.classList.add('error');
+    } finally {
+      if (refreshButton) {
+        refreshButton.disabled = false;
+        refreshButton.textContent = '↻ โหลดข้อมูลล่าสุด';
+      }
     }
+  }
+
+  function start() {
+    setupNavigation();
+    setActiveTab('overview');
+    const refreshButton = $('refresh-data');
+    if (refreshButton) refreshButton.addEventListener('click', () => loadData(true));
+    loadData(false);
   }
 
   document.addEventListener('DOMContentLoaded', start);

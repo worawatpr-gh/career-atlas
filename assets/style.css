@@ -607,3 +607,11 @@ body {
 @media (max-width: 380px) {
   .welcome-stats { grid-template-columns: 1fr; }
 }
+
+
+/* Live data refresh controls */
+.data-refresh-row{display:flex;align-items:center;justify-content:space-between;gap:14px;flex-wrap:wrap;margin:0 0 12px}
+.data-refresh-row .load-status{padding:2px 0 8px;flex:1 1 320px;margin:0}
+.refresh-data-button{flex:0 0 auto;white-space:nowrap;font:inherit;font-size:12px;padding:8px 13px;cursor:pointer}
+.refresh-data-button:disabled{opacity:.6;cursor:wait}
+@media(max-width:600px){.data-refresh-row{align-items:flex-start}.refresh-data-button{width:100%}}
