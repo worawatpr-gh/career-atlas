@@ -93,6 +93,8 @@
     $('metric-occupations').textContent = m.occupationCount;
     $('metric-thai').textContent = m.thaiOccupationCount;
     $('metric-thai-years').textContent = `${m.thaiOccupationCount} กลุ่มที่ไทยรายงาน · ${m.thaiYears[0]}–${m.thaiYears[1]}`;
+    const studyPeriod = $('study-period');
+    if (studyPeriod) studyPeriod.textContent = `${m.thaiYears[0]}–${m.thaiYears[1]}`;
     const updated = m.fetchedAt || m.updatedAt || 'ไม่ระบุเวลา';
     $('snapshot-meta').textContent = `ข้อมูลดึงล่าสุด: ${updated} · Snapshot: ${m.rawRows.toLocaleString('th-TH')} แถว · ${m.rawColumns} คอลัมน์ · พบ obs_value ที่หายไป ${m.missingObsValue} รายการ (ไม่นำมาตีความเป็นศูนย์) · แสดงค่าเฉลี่ย/แนวโน้มตามวิธีคำนวณใน Notebook`;
   }
