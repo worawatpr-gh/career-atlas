@@ -94,3 +94,19 @@ python -m http.server 8000
 - ภาษาอังกฤษ: Inter
 - ภาษาไทย: Noto Sans Thai
 - โหลดจาก Google Fonts พร้อม fallback เป็น Tahoma/sans-serif หากเครือข่ายไม่สามารถเข้าถึง Google Fonts ได้
+
+
+## การอัปเดตข้อมูลสดจาก ILOSTAT
+
+เว็บไซต์ยังคงเป็น Static Dashboard และใช้ไฟล์ `data/career_atlas_data.json` เป็นแหล่งข้อมูลสำหรับกราฟทั้งหมด แต่ไฟล์ Snapshot สามารถสร้างใหม่จาก ILOSTAT API ได้โดยอัตโนมัติ
+
+- สคริปต์ประมวลผล: `scripts/update_career_atlas.py`
+- Workflow: `.github/workflows/update-data.yml`
+- รอบอัตโนมัติ: ทุกวันจันทร์ 09:00 น. เวลาไทย (02:00 UTC)
+- สั่งอัปเดตเอง: GitHub → Actions → Update Career Atlas data → Run workflow
+- ปุ่มบนเว็บไซต์: โหลด Snapshot ล่าสุดที่เผยแพร่แล้ว ไม่เรียก API เพื่อเขียนข้อมูลลง Repository โดยตรง
+- วันที่ดึงข้อมูลจะแสดงบน Dashboard และหน้า Data & Method
+
+Pipeline ยึดกติกาจาก Notebook `Datahub_2026_live.ipynb`: ใช้ Indicator เดิม, ประเทศเป้าหมาย 4 ประเทศ, เพศ Total/Male/Female, ปีร่วมกัน, กลุ่มอาชีพที่มีข้อมูลครบ และตัวหาร `employment_total` เดิม หากประเทศหรือข้อมูลที่จำเป็นขาดหาย ระบบจะหยุดโดยไม่เขียนทับ Snapshot ที่ใช้งานอยู่
+
+เมื่อข้อมูล ILOSTAT ไม่เปลี่ยน ระบบจะไม่สร้าง commit ใหม่โดยไม่จำเป็น
