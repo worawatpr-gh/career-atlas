@@ -256,18 +256,18 @@ def main() -> None:
     # Preserve the existing website schema and legacy sex labels.
     sex_legacy = {"Total": "Sex: Total", "Male": "Sex: Male", "Female": "Sex: Female"}
     common_data = []
-    for row in df_comparable.itertuples(index=False):
+    for _, row in df_comparable.iterrows():
         common_data.append({
-            "country": row._asdict()["ref_area_label"],
-            "year": int(row.time),
-            "sex": sex_legacy.get(row._asdict()["sex_label"], row._asdict()["sex_label"]),
-            "code": row.occupation_code,
-            "nameEn": row.occupation_name,
-            "nameTh": row.occupation_name_th,
-            "value": float(row.obs_value),
-            "total": float(row.employment_total),
-            "share": float(row.occupation_share),
-            "coverage": float(row.coverage_pct),
+            "country": row["ref_area.label"],
+            "year": int(row["time"]),
+            "sex": sex_legacy.get(row["sex.label"], row["sex.label"]),
+            "code": row["occupation_code"],
+            "nameEn": row["occupation_name"],
+            "nameTh": row["occupation_name_th"],
+            "value": float(row["obs_value"]),
+            "total": float(row["employment_total"]),
+            "share": float(row["occupation_share"]),
+            "coverage": float(row["coverage_pct"]),
         })
 
     country_order = [c for c in COUNTRY_ORDER if c in selected_countries]
