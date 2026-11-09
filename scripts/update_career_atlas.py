@@ -118,13 +118,16 @@ def fetch_source() -> pd.DataFrame:
         if not filtered.empty:
             missing_countries = sorted(set(TARGET_CODES) - set(filtered["ref_area"].dropna()))
             if missing_countries:
-                raise RuntimeError(
-                    "ILOSTAT response is missing configured countries: "
+                print(
+                    "Response did not include all target countries ("
                     + ", ".join(missing_countries)
-                    + ". Snapshot was not replaced."
+                    + "); trying the full-indicator download."
                 )
+                continue
             return filtered
-    raise RuntimeError("ILOSTAT did not return the required indicator/country data")
+    raise RuntimeError(
+        "ILOSTAT did not return the required indicator data for all four target countries"
+    )
 
 
 def records(frame: pd.DataFrame) -> list[dict]:
