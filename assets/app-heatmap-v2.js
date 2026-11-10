@@ -108,14 +108,14 @@
   function updateRanking() {
     const year = Number($('ranking-year').value);
     const rows = DATA.thaiData.filter(r => r.year === year)
-      .sort((a,b) => b.share-a.share).slice(0,5).sort((a,b) => a.share-b.share);
-    $('ranking-context').textContent = `ประเทศไทย · ${year} · 5 กลุ่มแรก`;
+      .sort((a,b) => b.share-a.share).slice(0,10).sort((a,b) => a.share-b.share);
+    $('ranking-context').textContent = `ประเทศไทย · ${year} · 10 กลุ่มแรก`;
     const trace = {type:'bar',orientation:'h',x:rows.map(r=>r.share),y:rows.map(r=>r.nameTh),
       text:rows.map(r=>r.share.toFixed(1)),textposition:'outside',cliponaxis:false,
       marker:{color:rows.map((r,i)=>i===rows.length-1?'#12A58D':'#477DA5')},
       customdata:rows.map(r=>[r.code,r.value]),
       hovertemplate:'<b>%{y}</b><br>รหัสอาชีพ: %{customdata[0]}<br>สัดส่วน: %{x:.2f}%<br>จำนวนแรงงาน: %{customdata[1]:,.2f} พันคน<extra></extra>'};
-    Plotly.react('ranking-chart',[trace],baseLayout({height:450,margin:{l:255,r:85,t:30,b:60},
+    Plotly.react('ranking-chart',[trace],baseLayout({height:560,margin:{l:265,r:85,t:35,b:65},
       xaxis:{title:'สัดส่วนของผู้มีงานทำทั้งประเทศไทย (%)',rangemode:'tozero',gridcolor:'#edf1f5',ticksuffix:'%'},
       yaxis:{title:'',automargin:true,tickfont:{size:11}},showlegend:false}),plotConfig);
   }
@@ -152,9 +152,22 @@
   }
 
   function initEvolution() {
+    // Colab cell 42: Total observations and at least 8 distinct observed years.
+    const yearsByCode = new Map();
+    DATA.thaiData.forEach(row => {
+      if (!yearsByCode.has(row.code)) yearsByCode.set(row.code, new Set());
+      yearsByCode.get(row.code).add(Number(row.year));
+    });
     evolutionOptions = [...new Map(DATA.thaiData.map(r=>[r.code,{code:r.code,nameTh:r.nameTh}])).values()]
+      .filter(o => (yearsByCode.get(o.code)?.size || 0) >= 8)
       .sort((a,b)=>a.code.localeCompare(b.code,'en',{numeric:true}));
-    fillSelect($('evolution-occupation'),evolutionOptions.map(o=>({value:o.code,label:`${o.code} — ${o.nameTh}`})),evolutionOptions[0]?.code);
+    if (!evolutionOptions.length) {
+      $('evolution-occupation').innerHTML = '<option>ไม่มีอาชีพที่มีข้อมูลอย่างน้อย 8 ปี</option>';
+      $('evolution-chart').innerHTML = '<div class="insight-note">ไม่พบกลุ่มอาชีพที่ผ่านเกณฑ์ข้อมูลอย่างน้อย 8 ปี</div>';
+      return;
+    }
+    const initialCode = evolutionOptions.some(o => o.code === '25') ? '25' : evolutionOptions[0].code;
+    fillSelect($('evolution-occupation'),evolutionOptions.map(o=>({value:o.code,label:`${o.code} — ${o.nameTh}`})),initialCode);
     $('evolution-occupation').onchange=updateEvolution;
     updateEvolution();
   }
@@ -202,6 +215,13 @@
 
   function initGender() {
     const rows = DATA.genderGap.slice().sort((a, b) => a.difference - b.difference);
+    const genderNote = document.querySelector('#panel-gender .gender-explain');
+    if (genderNote && rows.length !== 40 && !genderNote.querySelector('.gender-snapshot-warning')) {
+      const warning = document.createElement('span');
+      warning.className = 'gender-snapshot-warning';
+      warning.textContent = `หมายเหตุ: Snapshot ปัจจุบันมีข้อมูล ${rows.length} กลุ่ม ยังไม่ตรงกับผล Colab ที่ใช้ 40 กลุ่มอาชีพครบถ้วน กรุณาอัปเดต Snapshot ก่อนใช้ผลส่วนนี้`;
+      genderNote.appendChild(warning);
+    }
     const traceMale = {type: 'bar', orientation: 'h', y: rows.map(r => r.nameTh), x: rows.map(r => -r.male), name: 'Male (เพศชาย)',
       marker: {color: '#3984C6'}, customdata: rows.map(r => [r.male, r.code]), hovertemplate: '<b>%{y}</b><br>รหัสอาชีพ: %{customdata[1]}<br>เพศชาย: %{customdata[0]:.2f}%<extra></extra>'};
     const traceFemale = {type: 'bar', orientation: 'h', y: rows.map(r => r.nameTh), x: rows.map(r => r.female), name: 'Female (เพศหญิง)',
