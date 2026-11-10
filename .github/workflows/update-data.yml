@@ -1,6 +1,11 @@
 name: Update Career Atlas data
 
 on:
+  push:
+    branches: [main]
+    paths:
+      - "scripts/update_career_atlas.py"
+      - ".github/workflows/update-data.yml"
   schedule:
     # Every Monday at 09:00 Thailand time (02:00 UTC)
     - cron: "0 2 * * 1"
