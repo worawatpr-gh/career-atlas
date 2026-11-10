@@ -23,7 +23,7 @@ function initRabbit(){
  '#ca-rabbit.ca-bounce #ca-rabbit-trigger{animation:ca-rabbit-pop .55s ease-in-out 1}',
  '@keyframes ca-rabbit-pop{0%,100%{transform:translateY(0) rotate(0)}30%{transform:translateY(-12px) rotate(-5deg)}60%{transform:translateY(1px) rotate(4deg)}80%{transform:translateY(-3px) rotate(-2deg)}}',
  '#ca-rabbit-panel h3{margin:0 28px 8px 0!important;font-size:14px!important;color:#4c2d89!important}#ca-rabbit-panel p{margin:7px 0!important;font-size:11px!important;line-height:1.6!important}',
- '#ca-rabbit-panel .ca-tip{margin-top:10px!important;padding:8px 10px!important;border-radius:11px!important;background:#f2edff!important;color:#513b7d!important;font-size:12px!important;line-height:1.6!important}',
+ '#ca-rabbit-panel .ca-tip{margin-top:10px!important;padding:8px 10px!important;border-radius:11px!important;background:#f2edff!important;color:#513b7d!important;font-size:11px!important;line-height:1.55!important}',
  '#ca-rabbit-panel .ca-close{position:absolute!important;right:12px!important;top:10px!important;width:28px!important;height:28px!important;padding:0!important;border:0!important;border-radius:50%!important;background:transparent!important;color:#7d6b9f!important;font-family:Arial,sans-serif!important;font-size:22px!important;font-weight:400!important;line-height:28px!important;text-align:center!important;cursor:pointer!important;box-shadow:none!important}',
  
  '.ca-guide-card{cursor:pointer}.ca-guide-card:focus-visible{outline:3px solid #9c80f2;outline-offset:3px}',
@@ -152,7 +152,7 @@ function initRabbit(){
   [/^ข้อค้นพบ:/i,'ข้อค้นพบจาก Backtest','ผลจาก Snapshot ปัจจุบันพบว่า Naive มี MAE เฉลี่ยต่ำกว่า Trend Line ทั้งปี 2024 และ 2025 แต่ Trend Line ยังมีบางกรณีที่คลาดเคลื่อนน้อยกว่า','สรุปโดยระบุปี หน่วย และจำนวนกรณีที่ทดสอบเสมอ'],
   [/คำถามหลักของโครงการ/i,'คำถามหลักของโครงการ','โครงการนี้สำรวจว่าโครงสร้างอาชีพของประเทศไทยเป็นอย่างไร และสัดส่วนของกลุ่มอาชีพเปลี่ยนแปลงไปตามเวลาอย่างไร','ใช้กราฟและตัวเลขจากข้อมูล ILOSTAT ที่แสดงบนหน้าเว็บเป็นหลักฐาน ไม่สรุปสาเหตุจากกราฟเพียงอย่างเดียว'],
   [/แหล่งข้อมูลต้นทาง|ILOSTAT/i,'แหล่งข้อมูล ILOSTAT','ชุดข้อมูล EMP_TEMP_SEX_OC2_NB_A คือ Employment by sex and occupation — ISCO level 2 โดยค่าจำนวนผู้มีงานทำรายงานเป็นพันคน และเว็บไซต์คำนวณสัดส่วนจากจำนวนผู้มีงานทำในอาชีพเทียบกับยอดรวมตามปีและเพศ','ตรวจสอบช่วงปีที่มีข้อมูลและค่า Missing ก่อนตีความ อย่าแทนค่าที่หายไปด้วยศูนย์']
- ];;
+ ];
  const textOf=el=>(el.innerText||el.textContent||'').replace(/\s+/g,' ').trim();
  function explainCard(card){
   const text=textOf(card);
@@ -181,7 +181,7 @@ function initRabbit(){
   explain(headingText,rule?rule[1]+' — '+rule[2]:description.slice(0,420),rule?rule[3]:tip,card);
  }
  document.addEventListener('click',event=>{
-  const nav=event.target.closest('.nav-tab');if(nav){const name=textOf(nav);explain(name,'หน้านี้แสดงข้อมูลในหัวข้อ '+name,'อ่านชื่อกราฟและตัวกรองก่อนเริ่มตีความ',nav);return;}
+  const nav=event.target.closest('.nav-tab');if(nav){const name=textOf(nav);const rule=rules.find(item=>item[0].test(name));explain(name,rule?rule[1]+' — '+rule[2]:'หน้านี้แสดงข้อมูลในหัวข้อ '+name,rule?rule[3]:'อ่านชื่อกราฟและตัวกรองก่อนเริ่มตีความ',nav);return;}
   const card=event.target.closest(cardSelector);if(card&&!event.target.closest('button,a,select,input,textarea'))explainCard(card);
  });
  document.addEventListener('change',event=>{const el=event.target;if(!el.matches('select,input'))return;const label=el.closest('label'),name=label?textOf(label).replace(el.value,'').trim():'ตัวกรอง',value=el.options?el.options[el.selectedIndex]?.text:el.value;explain('อัปเดตตัวกรอง: '+name,'คุณเลือกค่า “'+(value||'ไม่ได้ระบุ')+'” ระบบจะแสดงข้อมูลตามเงื่อนไขนี้','สังเกตว่ากราฟและค่าสรุปเปลี่ยนไปอย่างไร',el.parentElement);});
