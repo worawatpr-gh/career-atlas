@@ -25,16 +25,14 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "career_atlas_data.json"
 
 INDICATOR_ID = "EMP_TEMP_SEX_OC2_NB_A"
-TARGET_CODES = ["THA", "FRA", "JPN", "USA"]
+TARGET_CODES = ["THA"]
 REQUIRED_SEXES = ["Total", "Male", "Female"]
 BASE_URL = "https://rplumber.ilo.org/data/indicator/"
 REQUIRED_COLUMNS = [
     "ref_area", "ref_area.label", "sex", "sex.label",
     "classif1", "classif1.label", "time", "obs_value",
 ]
-COUNTRY_ORDER = [
-    "Japan", "Thailand", "France", "United States of America"
-]
+COUNTRY_ORDER = ["Thailand"]
 COUNTRY_LABELS = {
     "Thailand": "ประเทศไทย",
     "France": "ฝรั่งเศส",
@@ -126,7 +124,7 @@ def fetch_source() -> pd.DataFrame:
                 continue
             return filtered
     raise RuntimeError(
-        "ILOSTAT did not return the required indicator data for all four target countries"
+        "ILOSTAT did not return the required indicator data for Thailand"
     )
 
 
@@ -180,7 +178,7 @@ def main() -> None:
             year_sets.append(years)
     selected_years = sorted(set.intersection(*year_sets))
     if not selected_years:
-        raise RuntimeError("No shared years across all countries and all three sex categories")
+        raise RuntimeError("No shared Thailand years across all three sex categories")
 
     df_selected = df_isco08_detail[
         df_isco08_detail["ref_area.label"].isin(selected_countries)
@@ -197,7 +195,7 @@ def main() -> None:
     expected_combinations = len(TARGET_CODES) * len(selected_years) * len(REQUIRED_SEXES)
     common_codes = occupation_coverage[occupation_coverage == expected_combinations].index.tolist()
     if not common_codes:
-        raise RuntimeError("No occupation groups meet the complete cross-country coverage rule")
+        raise RuntimeError("No Thailand occupation groups meet the complete year/sex coverage rule")
 
     df_comparable = df_selected[df_selected["classif1"].isin(common_codes)].copy()
     key = ["ref_area", "time", "sex", "classif1"]
@@ -367,7 +365,7 @@ def main() -> None:
 
     # Backtest mirrors Notebook cell 46: linear trend versus last-value Naive,
     # training on the shared-year window, testing on later Thai observations.
-    train_start, train_end = min(selected_years), max(selected_years)
+    train_start, train_end = min(selected_years), min(max(selected_years), 2023)
     train = thai_all[thai_all["time"].between(train_start, train_end)].copy()
     test = thai_all[thai_all["time"] > train_end].copy()
     bt_rows = []
@@ -501,8 +499,8 @@ def main() -> None:
         raise RuntimeError(
             f"Common data row-count mismatch: expected {expected_rows}, got {len(common_data)}"
         )
-    if len(country_order) != len(TARGET_CODES):
-        raise RuntimeError("Country order is incomplete; snapshot was not replaced")
+    if len(country_order) != 1 or country_order[0] != "Thailand":
+        raise RuntimeError("Thailand-only country scope is incomplete; snapshot was not replaced")
     if not heatmap or not gender_gap:
         raise RuntimeError("One or more chart datasets are empty; snapshot was not replaced")
 
@@ -516,7 +514,7 @@ def main() -> None:
     print(
         f"Updated {OUTPUT}: {len(common_data):,} comparable rows, "
         f"{len(heatmap)} heatmap occupations, {len(thai_data):,} Thailand rows; "
-        f"shared years {min(selected_years)}–{max(selected_years)}; fetched {fetched_label}"
+        f"Thailand years {min(selected_years)}–{max(selected_years)}; fetched {fetched_label}"
     )
 
 
