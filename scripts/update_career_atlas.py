@@ -186,9 +186,17 @@ def main() -> None:
         & df_isco08_detail["sex.label"].isin(REQUIRED_SEXES)
     ].copy()
 
+    # Match Notebook cell 21 exactly: keep only numeric 2-digit ISCO-08 groups.
+    has_code = df_selected["classif1.label"].astype(str).str.contains(
+        r"level:\\s*\\d{2}\\s*-", regex=True, na=False
+    )
+    df_selected_codes = df_selected[has_code].copy()
+    if df_selected_codes.empty:
+        raise RuntimeError("No numeric 2-digit ISCO-08 occupation groups were found")
+
     # One occupation classification must have one row per country/year/sex.
     occupation_coverage = (
-        df_selected[["classif1", "ref_area", "time", "sex"]]
+        df_selected_codes[["classif1", "ref_area", "time", "sex"]]
         .drop_duplicates()
         .groupby("classif1").size()
     )
@@ -197,7 +205,7 @@ def main() -> None:
     if not common_codes:
         raise RuntimeError("No Thailand occupation groups meet the complete year/sex coverage rule")
 
-    df_comparable = df_selected[df_selected["classif1"].isin(common_codes)].copy()
+    df_comparable = df_selected_codes[df_selected_codes["classif1"].isin(common_codes)].copy()
     key = ["ref_area", "time", "sex", "classif1"]
     if df_comparable.duplicated(key).any():
         dup_count = int(df_comparable.duplicated(key).sum())
