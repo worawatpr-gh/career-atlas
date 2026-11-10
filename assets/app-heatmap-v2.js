@@ -251,7 +251,20 @@
   }
 
   function initBacktest() {
-    const rows = DATA.meta.backtestSummary;
+    const rows = DATA.meta.backtestSummary || [];
+    const cards = document.querySelectorAll('#panel-backtest .model-card');
+    if (cards.length >= 3 && rows.length) {
+      const first = rows[0], second = rows[1] || rows[0];
+      cards[0].querySelector('strong').textContent = first.trendMAE.toFixed(3);
+      cards[0].querySelector('small').textContent = `MAE ปี ${first.year} · จุดเปอร์เซ็นต์`;
+      cards[0].querySelector('em').textContent = `${second.year}: ${second.trendMAE.toFixed(3)}`;
+      cards[1].querySelector('strong').textContent = first.naiveMAE.toFixed(3);
+      cards[1].querySelector('small').textContent = `MAE ปี ${first.year} · จุดเปอร์เซ็นต์`;
+      cards[1].querySelector('em').textContent = `${second.year}: ${second.naiveMAE.toFixed(3)}`;
+      cards[2].querySelector('strong').textContent = DATA.meta.backtestTrendBetterPct == null ? '—' : `${DATA.meta.backtestTrendBetterPct.toFixed(1)}%`;
+      cards[2].querySelector('small').textContent = 'กรณีที่ Trend Line คลาดเคลื่อนน้อยกว่า Naive';
+      cards[2].querySelector('em').textContent = `${rows.reduce((n,r)=>n+r.count,0)} กรณีอาชีพ–ปีที่ทดสอบ`;
+    }
     const traceTrend = {type: 'bar', x: rows.map(r => String(r.year)), y: rows.map(r => r.trendMAE), name: 'Trend Line', marker: {color: '#477DA5'},
       text: rows.map(r => r.trendMAE.toFixed(3)), textposition: 'outside', hovertemplate: 'ปี %{x}<br>Trend MAE: %{y:.3f}<extra></extra>'};
     const traceNaive = {type: 'bar', x: rows.map(r => String(r.year)), y: rows.map(r => r.naiveMAE), name: 'Naive', marker: {color: '#13A38B'},
@@ -292,7 +305,7 @@
 
       initBacktest();
       const updated = DATA.meta.fetchedAt ? ` · ดึงจาก ILOSTAT เมื่อ ${DATA.meta.fetchedAt}` : '';
-      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวข้อมูลประเทศไทย${updated}`;
+      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวข้อมูลประเทศไทย${updated}`;
       status.classList.remove('error');
     } catch (error) {
       console.error(error);
