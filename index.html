@@ -4,15 +4,15 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#38236b">
-  <meta name="description" content="Career Atlas: สำรวจโครงสร้างอาชีพและตลาดแรงงานด้วยข้อมูล ILOSTAT โดยไม่ต้องลงชื่อเข้าใช้">
-  <title>Career Atlas | Explore Data. Discover Careers.</title>
+  <meta name="description" content="แดชบอร์ดข้อมูลอาชีพประเทศไทยที่อัปเดตตามรอบการเผยแพร่ของ ILOSTAT">
+  <title>Career Atlas Thailand | ILOSTAT Employment Dashboard</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+Thai:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/style.css?v=live-data-1">
-  <link rel="stylesheet" href="assets/theme-purple.css?v=11">
+  <link rel="stylesheet" href="assets/style.css?v=thailand-only-1">
+  <link rel="stylesheet" href="assets/theme-purple.css?v=thailand-only-1">
   <script src="assets/plotly.min.js"></script>
-  <script src="assets/app-heatmap-v2.js?v=live-data-1" defer></script>
+  <script src="assets/app-heatmap-v2.js?v=thailand-only-1" defer></script>
   <script src="assets/rabbit-guide-v9.js?v=30" defer></script>
 </head>
 <body>
@@ -32,10 +32,9 @@
       <nav class="main-nav" aria-label="เมนูหลัก Career Atlas">
         <button class="nav-tab active" data-tab="overview"><span class="nav-icon">▦</span><span>Dashboard</span></button>
         <button class="nav-tab" data-tab="ranking"><span class="nav-icon">▤</span><span>Career Ranking</span></button>
-        <button class="nav-tab" data-tab="fingerprint"><span class="nav-icon">▦</span><span>Country Fingerprint</span></button>
         <button class="nav-tab" data-tab="evolution"><span class="nav-icon">⌁</span><span>Career Evolution</span></button>
+        <button class="nav-tab" data-tab="heatmap"><span class="nav-icon">▦</span><span>Career Heatmap</span></button>
         <button class="nav-tab" data-tab="gender"><span class="nav-icon">◉</span><span>Gender Gap</span></button>
-        <button class="nav-tab" data-tab="thailand"><span class="nav-icon">⌖</span><span>Thailand Deep Dive</span></button>
         <button class="nav-tab" data-tab="backtest"><span class="nav-icon">▥</span><span>Backtest</span></button>
         <button class="nav-tab" data-tab="about"><span class="nav-icon">ⓘ</span><span>Data & Method</span></button>
       </nav>
@@ -43,7 +42,7 @@
     <section class="tab-panel active" id="panel-overview">
     <section class="dashboard-welcome">
       <div class="welcome-heading">
-        <h1>Dashboard</h1>
+        <h1>Career Atlas Thailand</h1><p class="dashboard-subtitle">แดชบอร์ดข้อมูลอาชีพประเทศไทยที่อัปเดตตามรอบการเผยแพร่ของ ILOSTAT</p>
         <p>ยินดีต้อนรับสู่นักสำรวจข้อมูลอาชีพ · สำรวจโครงสร้างแรงงานด้วยข้อมูลจริง</p>
         <div class="welcome-actions">
           <button class="button button-primary" data-open-tab="ranking">เริ่มสำรวจข้อมูล <span aria-hidden="true">→</span></button>
@@ -57,15 +56,15 @@
     </section>
 
     <section class="metrics-grid" aria-label="ขอบเขตข้อมูล">
-      <article class="metric-card metric-coral"><div class="metric-symbol">◎</div><span class="metric-label">ประเทศที่เปรียบเทียบ</span><strong id="metric-countries">4</strong><small>ไทย · ฝรั่งเศส · ญี่ปุ่น · สหรัฐฯ</small><span class="metric-watermark">◉</span></article>
-      <article class="metric-card metric-blue"><div class="metric-symbol">▣</div><span class="metric-label">ช่วงปีเปรียบเทียบ</span><strong id="metric-years">2013–2023</strong><small>ข้อมูลร่วมกัน 11 ปี</small><span class="metric-watermark">▱</span></article>
-      <article class="metric-card metric-yellow"><div class="metric-symbol">▤</div><span class="metric-label">กลุ่มอาชีพที่เปรียบเทียบได้</span><strong id="metric-occupations">21</strong><small>ISCO-08 ระดับ 2 หลัก</small><span class="metric-watermark">▥</span></article>
-      <article class="metric-card metric-green"><div class="metric-symbol">⌖</div><span class="metric-label">เจาะลึกประเทศไทย</span><strong id="metric-thai">43</strong><small id="metric-thai-years">กลุ่มที่ไทยรายงาน · 2013–2025</small><span class="metric-watermark">▦</span></article>
+      <article class="metric-card metric-coral"><div class="metric-symbol">◎</div><span class="metric-label">ประเทศที่ศึกษา</span><strong>1</strong><small>ประเทศไทย</small><span class="metric-watermark">◉</span></article>
+      <article class="metric-card metric-blue"><div class="metric-symbol">▣</div><span class="metric-label">ช่วงปีข้อมูล</span><strong id="metric-years">—</strong><small>ตามข้อมูลที่ ILOSTAT เผยแพร่</small><span class="metric-watermark">▱</span></article>
+      <article class="metric-card metric-yellow"><div class="metric-symbol">▤</div><span class="metric-label">กลุ่มอาชีพ</span><strong id="metric-occupations">—</strong><small>ISCO-08 ระดับ 2 หลัก</small><span class="metric-watermark">▥</span></article>
+      <article class="metric-card metric-green"><div class="metric-symbol">↻</div><span class="metric-label">รอบอัปเดต</span><strong>รายสัปดาห์</strong><small>จันทร์ 09:00 น. เวลาไทย</small><span class="metric-watermark">▦</span></article>
     </section>
 
 <div class="data-refresh-row">
   <div id="load-status" class="load-status" role="status">กำลังเตรียมข้อมูลสำหรับการสำรวจ…</div>
-  <button id="refresh-data" class="button button-secondary refresh-data-button" type="button">↻ โหลดข้อมูลล่าสุด</button>
+  <button id="refresh-data" class="button button-secondary refresh-data-button" type="button">↻ โหลด Snapshot ล่าสุด</button>
 </div>
 
       <div class="section-heading">
@@ -74,49 +73,26 @@
       <div class="overview-grid">
         <article class="overview-card overview-question">
           <span class="card-index">01 / QUESTION</span><h3>คำถามหลักของโครงการ</h3>
-          <p class="question-large">โครงสร้างอาชีพของประเทศไทยแตกต่างจากประเทศอื่นอย่างไร และเปลี่ยนแปลงไปตามเวลาอย่างไร?</p>
+          <p class="question-large">โครงสร้างอาชีพของประเทศไทยเป็นอย่างไร และเปลี่ยนแปลงไปตามเวลาอย่างไร?</p>
           <p class="muted">ลองตั้งสมมติฐานก่อนเปิดกราฟ แล้วกลับมาตรวจสอบด้วยหลักฐานที่พบ</p>
         </article>
         <article class="overview-card">
           <span class="card-index">02 / EXPLORE</span><h3>เลือกกราฟให้ตรงกับคำถาม</h3>
           <ul class="feature-list">
             <li><b>Career Ranking</b><span>อาชีพใดมีสัดส่วนสูงในประเทศและปีที่เลือก?</span></li>
-            <li><b>Country Fingerprint</b><span>โครงสร้างอาชีพแต่ละประเทศเหมือนหรือต่างกันอย่างไร?</span></li>
-            <li><b>Career Evolution</b><span>สัดส่วนอาชีพเปลี่ยนไปตามเวลาอย่างไร?</span></li>
-            <li><b>Gender Gap</b><span>สัดส่วนอาชีพภายในแรงงานหญิงและชายแตกต่างกันอย่างไร?</span></li>
-          </ul>
-        </article>
-        <article class="overview-card overview-dark">
-          <span class="card-index">03 / THINK</span><h3>อย่าเพิ่งสรุปเกินข้อมูล</h3>
-          <p>สัดส่วนแรงงานไม่ใช่เงินเดือน ความพึงพอใจ หรือความต้องการงานในอนาคต</p>
-          <p>กราฟช่วยให้เห็นรูปแบบ แต่ไม่ได้ยืนยันสาเหตุของการเปลี่ยนแปลง</p>
-          <button class="text-button" data-open-tab="about">อ่านข้อจำกัดของข้อมูล <span aria-hidden="true">→</span></button>
-        </article>
-      </div>
-      <div class="workflow-strip">
-        <div class="workflow-title"><span class="section-kicker">DATA SCIENCE WORKFLOW</span><h3>7 ขั้นตอนจากคำถามสู่ข้อค้นพบ</h3></div>
-        <div class="workflow-steps">
-          <span><b>1</b>Problem Definition</span><span><b>2</b>Data Collection</span><span><b>3</b>Data Understanding</span><span><b>4</b>Preparation</span><span><b>5</b>Analysis & Modeling</span><span><b>6</b>Visualization</span><span><b>7</b>Communication</span>
-        </div>
+            <li>        </div>
       </div>
     </section>
 
     <section class="tab-panel" id="panel-ranking" hidden>
-      <div class="section-heading"><div><div class="section-kicker">01 / RANKING</div><h2>Career Ranking</h2><p>สำรวจ 10 กลุ่มอาชีพที่มีสัดส่วนผู้มีงานทำสูงสุดในประเทศและปีที่เลือก</p></div><span class="section-number">01</span></div>
+      <div class="section-heading"><div><div class="section-kicker">01 / RANKING</div><h2>Career Ranking</h2><p>สำรวจ 5 กลุ่มอาชีพที่มีสัดส่วนผู้มีงานทำสูงสุดในประเทศไทยและปีที่เลือก</p></div><span class="section-number">01</span></div>
       <div class="control-bar">
-        <label>ประเทศ<select id="ranking-country" aria-label="เลือกประเทศ"></select></label>
+        
         <label>ปี<select id="ranking-year" aria-label="เลือกปี"></select></label>
         <span class="control-hint">ข้อมูลเพศรวม (Sex: Total)</span>
       </div>
-      <div class="chart-card"><div class="chart-topline"><span class="chart-label">TOP 10 OCCUPATION GROUPS</span><span id="ranking-context" class="chart-context"></span></div><div id="ranking-chart" class="chart-area chart-ranking"></div></div>
+      <div class="chart-card"><div class="chart-topline"><span class="chart-label">TOP 5 OCCUPATION GROUPS</span><span id="ranking-context" class="chart-context"></span></div><div id="ranking-chart" class="chart-area chart-ranking"></div></div>
       <div class="insight-note"><b>อ่านกราฟอย่างไร?</b> แท่งที่ยาวกว่าแสดงว่าสัดส่วนกลุ่มอาชีพนั้นต่อผู้มีงานทำทั้งประเทศสูงกว่า ไม่ได้หมายความว่าเป็นอาชีพที่ดีที่สุดหรือมีรายได้สูงที่สุด</div>
-    </section>
-
-    <section class="tab-panel" id="panel-fingerprint" hidden>
-      <div class="section-heading"><div><div class="section-kicker">02 / COUNTRY COMPARISON</div><h2>Country Fingerprint</h2><p>เปรียบเทียบค่าเฉลี่ยสัดส่วนของกลุ่มอาชีพใน 4 ประเทศตลอดช่วงปีที่มีข้อมูลร่วมกัน</p></div><span class="section-number">02</span></div>
-      <div class="legend-intro"><span class="gradient-key"></span><span>สีอ่อน = สัดส่วนต่ำ</span><span>สีเข้ม = สัดส่วนสูง</span><span class="legend-spacer"></span><span>ค่าเฉลี่ยปี 2013–2023</span></div>
-      <div class="chart-card"><div class="chart-topline"><span class="chart-label">OCCUPATION STRUCTURE HEATMAP</span><span class="chart-context">เรียงตามสัดส่วนเฉลี่ยของประเทศไทย</span></div><div id="fingerprint-chart" class="chart-area chart-heatmap"></div></div>
-      <div class="insight-note"><b>ข้อควรระวัง:</b> สีแสดงค่าเฉลี่ยสัดส่วนรายปี ไม่ใช่จำนวนแรงงานสะสม และไม่ได้หมายถึงจำนวนบุคคลที่ไม่ซ้ำกัน</div>
     </section>
 
     <section class="tab-panel" id="panel-evolution" hidden>
@@ -127,25 +103,22 @@
       <div class="method-grid"><div><b>เส้นทึบ</b><span>สัดส่วนจากข้อมูลจริงที่สังเกตได้</span></div><div><b>เส้นประ</b><span>Linear Regression ในช่วงปีข้อมูลจริง</span></div><div><b>เส้นจุด</b><span>การต่อสมการแนวโน้มออกไป 3 ปี ไม่ใช่คำยืนยันอนาคต</span></div></div>
     </section>
 
+    <section class="tab-panel" id="panel-heatmap" hidden>
+      <div class="section-heading"><div><div class="section-kicker">03 / OCCUPATION PATTERNS</div><h2>Career Heatmap</h2><p>เปรียบเทียบสัดส่วนการจ้างงานของหลายกลุ่มอาชีพในประเทศไทยตามปี</p></div><span class="section-number">03</span></div>
+      <div class="legend-intro"><span class="gradient-key"></span><span>สีอ่อน = สัดส่วนต่ำ</span><span>สีเข้ม = สัดส่วนสูง</span><span class="legend-spacer"></span><span>ตัวเลขในช่องไม่มีเครื่องหมาย %</span></div>
+      <div class="chart-card"><div class="chart-topline"><span class="chart-label">THAILAND OCCUPATION SHARE BY YEAR</span><span class="chart-context">เพศรวม (Sex: Total)</span></div><div id="heatmap-chart" class="chart-area chart-heatmap"></div></div>
+      <div class="insight-note"><b>วิธีอ่าน:</b> สีและตัวเลขแสดงสัดส่วนการจ้างงาน (%) ของแต่ละกลุ่มอาชีพในปีนั้น ช่องว่างหมายถึงไม่มีข้อมูล ไม่ใช่ 0</div>
+    </section>
     <section class="tab-panel" id="panel-gender" hidden>
       <div class="section-heading"><div><div class="section-kicker">04 / GENDER STRUCTURE</div><h2>Gender Gap</h2><p>เปรียบเทียบสัดส่วนอาชีพภายในโครงสร้างผู้มีงานทำของผู้หญิงและผู้ชายในประเทศไทย</p></div><span class="section-number">04</span></div>
-      <div class="gender-explain"><span class="gender-swatch male"></span><span>ด้านซ้าย: เพศชาย</span><span class="gender-swatch female"></span><span>ด้านขวา: เพศหญิง</span><span class="legend-spacer"></span><span>ค่าเฉลี่ยปี 2013–2023</span></div>
-      <div class="chart-card"><div class="chart-topline"><span class="chart-label">FEMALE VS MALE OCCUPATION SHARE</span><span class="chart-context">ประเทศไทย · 21 กลุ่มที่เปรียบเทียบร่วมกัน</span></div><div id="gender-chart" class="chart-area chart-gender"></div></div>
+      <div class="gender-explain"><span class="gender-swatch male"></span><span>ด้านซ้าย: เพศชาย</span><span class="gender-swatch female"></span><span>ด้านขวา: เพศหญิง</span><span class="legend-spacer"></span><span>ค่าเฉลี่ยตามปีที่มีข้อมูลร่วมกัน</span></div>
+      <div class="chart-card"><div class="chart-topline"><span class="chart-label">FEMALE VS MALE OCCUPATION SHARE</span><span class="chart-context">ประเทศไทย · กลุ่มอาชีพที่มีข้อมูลทั้งสองเพศ</span></div><div id="gender-chart" class="chart-area chart-gender"></div></div>
       <div class="table-card"><div class="table-heading"><h3>5 กลุ่มอาชีพที่มีผลต่างสัดส่วนมากที่สุด</h3><span>หน่วย: จุดเปอร์เซ็นต์</span></div><div class="table-scroll"><table id="gender-table"><thead><tr><th>รหัส</th><th>กลุ่มอาชีพ</th><th>หญิง (%)</th><th>ชาย (%)</th><th>หญิง − ชาย</th></tr></thead><tbody></tbody></table></div></div>
       <div class="insight-note"><b>วิธีอ่าน:</b> สัดส่วนหญิงคำนวณจากจำนวนผู้หญิงในอาชีพนั้นหารด้วยผู้มีงานทำหญิงทั้งประเทศ ส่วนสัดส่วนชายใช้ตัวหารของผู้ชายแยกต่างหาก ความแตกต่างจึงเป็น “จุดเปอร์เซ็นต์” ไม่ใช่เปอร์เซ็นต์การเปลี่ยนแปลง</div>
     </section>
 
-    <section class="tab-panel" id="panel-thailand" hidden>
-      <div class="section-heading"><div><div class="section-kicker">05 / THAILAND DEEP DIVE</div><h2>เจาะลึกประเทศไทย</h2><p>สำรวจกลุ่มอาชีพที่ไทยรายงานเพิ่มเติมนอกเหนือจากชุดเปรียบเทียบข้ามประเทศ</p></div><span class="section-number">05</span></div>
-      <div class="control-bar"><label class="wide-label">กลุ่มอาชีพ<select id="thailand-occupation" aria-label="เลือกกลุ่มอาชีพประเทศไทย"></select></label><span class="control-hint">ค่าเริ่มต้น: รหัส 25 · ICT Professionals</span></div>
-      <div id="thailand-summary" class="summary-band"></div>
-      <div class="chart-card"><div class="chart-topline"><span class="chart-label">ACTUAL DATA + LINEAR TREND</span><span class="chart-context">ประเทศไทย · ใช้ข้อมูลทุกปีที่มีรายงาน</span></div><div id="thailand-chart" class="chart-area chart-thailand"></div></div>
-      <div class="table-card"><div class="table-heading"><h3>ตารางข้อมูลของกลุ่มอาชีพที่เลือก</h3><span>จำนวนแรงงาน: พันคน</span></div><div class="table-scroll"><table id="thailand-table"><thead><tr><th>ปี</th><th>จำนวนแรงงาน (พันคน)</th><th>สัดส่วน (%)</th></tr></thead><tbody></tbody></table></div></div>
-      <div class="insight-note"><b>ข้อจำกัด:</b> กลุ่มอาชีพ ISCO ระดับ 2 หลักเป็นหมวดกว้าง ไม่ใช่ชื่อตำแหน่งงานเฉพาะ กลุ่มที่ไทยรายงานเพิ่มเติมไม่ควรนำไปเทียบตรง ๆ กับประเทศอื่นหากไม่ผ่านเกณฑ์ข้อมูลร่วมกัน เส้นประเป็นเส้นแนวโน้มย้อนหลังเท่านั้น ไม่ใช่เส้นคาดการณ์</div>
-    </section>
-
     <section class="tab-panel" id="panel-backtest" hidden>
-      <div class="section-heading"><div><div class="section-kicker">06 / MODEL EVALUATION</div><h2>Backtest: ทดสอบแบบจำลองอย่างง่าย</h2><p>เปรียบเทียบ Linear Trend กับ Naive โดยฝึกจากข้อมูลปี 2013–2023 แล้วทดสอบกับข้อมูลจริงปี 2024–2025 ของประเทศไทย</p></div><span class="section-number">06</span></div>
+      <div class="section-heading"><div><div class="section-kicker">06 / MODEL EVALUATION</div><h2>Backtest: ทดสอบแบบจำลองอย่างง่าย</h2><p>เปรียบเทียบ Linear Trend กับ Naive โดยฝึกจากข้อมูลช่วงปี 2013–2023 แล้วทดสอบกับข้อมูลจริงปี 2024–2025 ของประเทศไทย</p></div><span class="section-number">06</span></div>
       <div class="model-cards"><article class="model-card"><span>Trend Line</span><strong>0.166</strong><small>MAE ปี 2024 · จุดเปอร์เซ็นต์</small><em>2025: 0.180</em></article><article class="model-card model-card-highlight"><span>Naive</span><strong>0.136</strong><small>MAE ปี 2024 · จุดเปอร์เซ็นต์</small><em>2025: 0.148</em></article><article class="model-card"><span>ผลการเปรียบเทียบ</span><strong>33.8%</strong><small>กรณีที่ Trend Line คลาดเคลื่อนน้อยกว่า Naive</small><em>80 กลุ่มอาชีพ–ปีที่ทดสอบ</em></article></div>
       <div class="chart-card"><div class="chart-topline"><span class="chart-label">MEAN ABSOLUTE ERROR (MAE)</span><span class="chart-context">ยิ่งต่ำยิ่งดี · หน่วยจุดเปอร์เซ็นต์</span></div><div id="backtest-chart" class="chart-area chart-backtest"></div></div>
       <div class="table-card"><div class="table-heading"><h3>5 กรณีที่เส้นแนวโน้มคลาดเคลื่อนมากที่สุด</h3><span>เรียงตามความผิดพลาดของ Trend Line</span></div><div class="table-scroll"><table id="backtest-table"><thead><tr><th>รหัส</th><th>กลุ่มอาชีพ</th><th>ปี</th><th>ค่าจริง (%)</th><th>Trend (%)</th><th>Naive (%)</th></tr></thead><tbody></tbody></table></div></div>
@@ -153,15 +126,15 @@
     </section>
 
     <section class="tab-panel" id="panel-about" hidden>
-      <div class="section-heading"><div><div class="section-kicker">DATA NOTES</div><h2>ข้อมูลและวิธีใช้</h2><p>ที่มา นิยาม ตัวหาร และข้อจำกัดที่ควรทราบก่อนตีความกราฟ</p></div><span class="section-number">INFO</span></div>
+      <div class="section-heading"><div><div class="section-kicker">DATA NOTES</div><h2>ข้อมูลและวิธีใช้</h2><p>แหล่งข้อมูล รอบการอัปเดต นิยาม และข้อจำกัดก่อนตีความกราฟ</p></div><span class="section-number">INFO</span></div>
       <div class="about-grid">
-        <article class="about-card"><span class="card-index">DATA SOURCE</span><h3>แหล่งข้อมูลต้นทาง</h3><p><b>ILOSTAT · International Labour Organization (ILO)</b></p><p>ชุดข้อมูล Employment by sex and occupation – ISCO level 2 (thousands)</p><p class="mono">EMP_TEMP_SEX_OC2_NB_A</p><a class="inline-link" href="https://ilostat.ilo.org/data/" target="_blank" rel="noopener">เปิดเว็บไซต์ ILOSTAT ↗</a></article>
-        <article class="about-card"><span class="card-index">COMPARABILITY</span><h3>ชุดเปรียบเทียบข้ามประเทศ</h3><ul><li>ไทย ฝรั่งเศส ญี่ปุ่น และสหรัฐอเมริกา</li><li>ช่วงปี 2013–2023</li><li>21 กลุ่มอาชีพที่มีข้อมูลครบทุกประเทศ ทุกปี และทุกเพศ</li><li>รวม 2,772 แถวในข้อมูลที่ใช้วิเคราะห์</li></ul></article>
-        <article class="about-card"><span class="card-index">THAILAND DATA</span><h3>ข้อมูลเจาะลึกประเทศไทย</h3><ul><li>43 กลุ่มอาชีพที่ไทยรายงาน</li><li>ปี 2013–2025 (ขึ้นกับปีที่มีข้อมูลของแต่ละกลุ่ม)</li><li>รวม 532 แถวหลังเลือกเพศรวมและข้อมูลที่มีตัวหาร</li><li>รวมกลุ่ม ICT รหัส 25 และ 35</li></ul></article>
-        <article class="about-card"><span class="card-index">HOW TO READ</span><h3>วิธีคำนวณสัดส่วน</h3><p>สัดส่วนอาชีพ (%) = จำนวนผู้มีงานทำในกลุ่มอาชีพ ÷ จำนวนผู้มีงานทำรวมของประเทศในปีและเพศเดียวกัน × 100</p><p>จำนวนแรงงานมีหน่วยเป็นพันคน และตัวหารมาจากแถว Total ของ ILOSTAT</p></article>
+        <article class="about-card"><span class="card-index">DATA SOURCE</span><h3>แหล่งข้อมูลต้นทาง</h3><p><b>ILOSTAT · International Labour Organization (ILO)</b></p><p>Employment by sex and occupation – ISCO level 2 (thousands)</p><p class="mono">EMP_TEMP_SEX_OC2_NB_A</p><a class="inline-link" href="https://ilostat.ilo.org/data/" target="_blank" rel="noopener">เปิดเว็บไซต์ ILOSTAT ↗</a></article>
+        <article class="about-card"><span class="card-index">UPDATE CYCLE</span><h3>รอบการอัปเดตข้อมูล</h3><ul><li>GitHub Actions ตรวจสอบและดึงข้อมูลจาก ILOSTAT ทุกวันจันทร์ เวลา 09:00 น. ตามเวลาไทย</li><li>ปุ่ม “โหลดข้อมูลล่าสุด” โหลด Snapshot ล่าสุดที่เผยแพร่แล้ว</li><li>เมื่อ ILOSTAT ไม่มีการเปลี่ยนแปลง ระบบจะไม่สร้าง Snapshot ใหม่โดยไม่จำเป็น</li></ul></article>
+        <article class="about-card"><span class="card-index">THAILAND DATA</span><h3>ขอบเขตข้อมูลประเทศไทย</h3><ul><li>ประเทศไทยเท่านั้น</li><li>ISCO-08 ระดับ 2 หลัก</li><li>เพศรวม (Total), ชาย (Male) และหญิง (Female)</li><li>ใช้ทุกปีและทุกกลุ่มอาชีพที่มีข้อมูลตามเงื่อนไขของแต่ละกราฟ</li></ul></article>
+        <article class="about-card"><span class="card-index">HOW TO READ</span><h3>วิธีคำนวณสัดส่วน</h3><p>สัดส่วนอาชีพ (%) = จำนวนผู้มีงานทำในกลุ่มอาชีพ ÷ จำนวนผู้มีงานทำรวมของประเทศไทยในปีและเพศเดียวกัน × 100</p><p>จำนวนแรงงานมีหน่วยเป็นพันคน ตัวหารมาจากแถว Total ของ ILOSTAT</p></article>
       </div>
-      <div class="warning-panel"><h3>ข้อจำกัดสำคัญ</h3><ul><li>21 กลุ่มอาชีพเป็นชุดที่เปรียบเทียบร่วมกัน ไม่ใช่อาชีพทั้งหมดที่แต่ละประเทศรายงาน</li><li>ผลรวมสัดส่วนของ 21 กลุ่มอาจต่ำกว่า 100% เพราะยังมีกลุ่มอาชีพอื่นนอกชุดเปรียบเทียบ</li><li>ข้อมูลที่หายไป (Missing Value) ไม่ได้หมายถึงศูนย์ และไม่ควรแทนด้วย 0 โดยไม่มีเหตุผลทางสถิติ</li><li>ไม่ควรนำ Sex: Total ไปบวกซ้ำกับ Sex: Female และ Sex: Male</li><li>ข้อมูลนี้ไม่แสดงเงินเดือน ความพึงพอใจ ตำแหน่งงานว่าง หรือความต้องการแรงงานในอนาคตโดยตรง</li><li>ญี่ปุ่นมีหมายเหตุการจัดกลุ่ม “Nonstandard occupation: Including associates” และ “Including 3” ในกลุ่ม 21, 22, 23 และ 26 ตามหมายเหตุใน snapshot</li></ul></div>
-      <div class="privacy-panel"><span class="privacy-icon">✓</span><div><b>ไม่ต้องลงชื่อเข้าใช้ และไม่มีการเก็บข้อมูลนักเรียน</b><p>เว็บไซต์นี้เป็นหน้า Static สำหรับอ่านและสำรวจข้อมูล ไม่มีแบบฟอร์มลงทะเบียน ไม่มีระบบบัญชีผู้ใช้ และไม่ส่งข้อมูลส่วนบุคคลของผู้เรียน</p></div></div>
+      <div class="warning-panel"><h3>ข้อจำกัดสำคัญ</h3><ul><li>ข้อมูลนี้เป็นสถิติที่เผยแพร่เป็นรอบ ไม่ใช่ข้อมูล Real-time ทุกวินาที</li><li>ข้อมูลที่หายไป (Missing Value) ไม่ได้หมายถึงศูนย์ และไม่ควรแทนด้วย 0</li><li>ไม่ควรนำ Sex: Total ไปบวกซ้ำกับ Sex: Female และ Sex: Male</li><li>กลุ่มอาชีพที่แสดงขึ้นกับการจำแนกและข้อมูลที่ ILOSTAT รายงานในแต่ละปี</li><li>ข้อมูลนี้ไม่แสดงเงินเดือน ความพึงพอใจ ตำแหน่งงานว่าง หรือความต้องการแรงงานในอนาคตโดยตรง</li><li>แนวโน้มที่ต่อออกไปเป็นการคำนวณจากแนวโน้มในอดีต ไม่ใช่การรับประกันอนาคต</li></ul></div>
+      <div class="privacy-panel"><span class="privacy-icon">✓</span><div><b>ไม่ต้องลงชื่อเข้าใช้ และไม่มีการเก็บข้อมูลนักเรียน</b><p>เว็บไซต์นี้เป็น Static Dashboard สำหรับอ่านและสำรวจข้อมูลรวมระดับประเทศ/ปี/เพศ/กลุ่มอาชีพ</p></div></div>
       <div class="about-footnote" id="snapshot-meta"></div>
     </section>
 
