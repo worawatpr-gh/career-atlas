@@ -45,8 +45,8 @@
       panel.setAttribute('aria-hidden', String(!isActive));
     });
     const tabLabels = {
-      overview: 'Dashboard', ranking: 'Career Ranking', fingerprint: 'Country Fingerprint',
-      evolution: 'Career Evolution', gender: 'Gender Gap', thailand: 'Thailand Deep Dive',
+      overview: 'Dashboard', ranking: 'Career Ranking', heatmap: 'Career Heatmap',
+      evolution: 'Career Evolution', gender: 'Gender Gap',
       backtest: 'Backtest', about: 'Data & Method'
     };
     const breadcrumb = $('breadcrumb-current');
@@ -56,10 +56,10 @@
       const toggle = $('sidebar-toggle');
       if (toggle) toggle.setAttribute('aria-expanded', 'false');
     }
-    if (tab === 'fingerprint') setTimeout(() => window.Plotly?.Plots.resize($('fingerprint-chart')), 40);
+    if (tab === 'heatmap') setTimeout(() => window.Plotly?.Plots.resize($('heatmap-chart')), 40);
     if (tab === 'gender') setTimeout(() => window.Plotly?.Plots.resize($('gender-chart')), 40);
     if (tab === 'evolution') setTimeout(() => window.Plotly?.Plots.resize($('evolution-chart')), 40);
-    if (tab === 'thailand') setTimeout(() => window.Plotly?.Plots.resize($('thailand-chart')), 40);
+    
     if (tab === 'backtest') setTimeout(() => window.Plotly?.Plots.resize($('backtest-chart')), 40);
     if (tab === 'ranking') setTimeout(() => window.Plotly?.Plots.resize($('ranking-chart')), 40);
   }
@@ -88,78 +88,54 @@
 
   function renderMetrics() {
     const m = DATA.meta;
-    $('metric-countries').textContent = m.countries.length;
-    $('metric-years').textContent = `${m.sharedYears[0]}–${m.sharedYears[m.sharedYears.length - 1]}`;
-    $('metric-occupations').textContent = m.occupationCount;
-    $('metric-thai').textContent = m.thaiOccupationCount;
-    $('metric-thai-years').textContent = `${m.thaiOccupationCount} กลุ่มที่ไทยรายงาน · ${m.thaiYears[0]}–${m.thaiYears[1]}`;
+    const years = [...new Set(DATA.thaiData.map(r => r.year))].sort((a,b) => a-b);
+    const occupations = new Set(DATA.thaiData.map(r => r.code));
+    $('metric-years').textContent = years.length ? `${years[0]}–${years[years.length - 1]}` : 'ไม่ระบุ';
+    $('metric-occupations').textContent = occupations.size;
     const studyPeriod = $('study-period');
-    if (studyPeriod) studyPeriod.textContent = `${m.thaiYears[0]}–${m.thaiYears[1]}`;
+    if (studyPeriod) studyPeriod.textContent = years.length ? `${years[0]}–${years[years.length - 1]}` : 'ไม่ระบุ';
     const updated = m.fetchedAt || m.updatedAt || 'ไม่ระบุเวลา';
-    $('snapshot-meta').textContent = `ข้อมูลดึงล่าสุด: ${updated} · Snapshot: ${m.rawRows.toLocaleString('th-TH')} แถว · ${m.rawColumns} คอลัมน์ · พบ obs_value ที่หายไป ${m.missingObsValue} รายการ (ไม่นำมาตีความเป็นศูนย์) · แสดงค่าเฉลี่ย/แนวโน้มตามวิธีคำนวณใน Notebook`;
+    $('snapshot-meta').textContent = `ดึงข้อมูลจาก ILOSTAT ล่าสุด: ${updated} · ${m.thaiRows || DATA.thaiData.length} แถว · ${occupations.size} กลุ่มอาชีพ · ค่า Missing ไม่ถูกแทนด้วย 0`;
   }
 
   function initRanking() {
-    const countries = [...DATA.meta.countries].sort((a, b) => countryLabel(a).localeCompare(countryLabel(b), 'th'));
-    fillSelect($('ranking-country'), countries.map(c => ({value: c, label: countryLabel(c)})), 'Thailand');
-    fillSelect($('ranking-year'), DATA.meta.sharedYears.map(y => ({value: y, label: String(y)})), Math.max(...DATA.meta.sharedYears));
-    $('ranking-country').onchange = updateRanking;
+    const years = [...new Set(DATA.thaiData.map(r => r.year))].sort((a,b) => a-b);
+    fillSelect($('ranking-year'), years.map(y => ({value:y,label:String(y)})), years[years.length-1]);
     $('ranking-year').onchange = updateRanking;
     updateRanking();
   }
 
   function updateRanking() {
-    const country = $('ranking-country').value;
     const year = Number($('ranking-year').value);
-    const rows = DATA.commonData.filter(r => r.country === country && r.year === year && r.sex === 'Sex: Total')
-      .sort((a, b) => b.share - a.share).slice(0, 10).sort((a, b) => a.share - b.share);
-    $('ranking-context').textContent = `${countryLabel(country)} · ${year} · 10 กลุ่มแรก`;
-    const trace = {
-      type: 'bar', orientation: 'h',
-      x: rows.map(r => r.share), y: rows.map(r => r.nameTh),
-      text: rows.map(r => `${r.share.toFixed(1)}%`), textposition: 'outside', cliponaxis: false,
-      marker: {color: rows.map((r, i) => i === rows.length - 1 ? '#12A58D' : '#477DA5'), line: {width: 0}},
-      customdata: rows.map(r => [r.code, r.value]),
-      hovertemplate: '<b>%{y}</b><br>รหัสอาชีพ: %{customdata[0]}<br>สัดส่วน: %{x:.2f}%<br>จำนวนแรงงาน: %{customdata[1]:,.2f} พันคน<extra></extra>'
-    };
-    const layout = baseLayout({
-      height: 545, margin: {l: 255, r: 85, t: 30, b: 60},
-      xaxis: {title: 'สัดส่วนของผู้มีงานทำทั้งประเทศ (%)', rangemode: 'tozero', gridcolor: '#edf1f5', ticksuffix: '%'},
-      yaxis: {title: '', automargin: true, tickfont: {size: 11}}, showlegend: false
-    });
-    Plotly.react('ranking-chart', [trace], layout, plotConfig);
+    const rows = DATA.thaiData.filter(r => r.year === year)
+      .sort((a,b) => b.share-a.share).slice(0,5).sort((a,b) => a.share-b.share);
+    $('ranking-context').textContent = `ประเทศไทย · ${year} · 5 กลุ่มแรก`;
+    const trace = {type:'bar',orientation:'h',x:rows.map(r=>r.share),y:rows.map(r=>r.nameTh),
+      text:rows.map(r=>r.share.toFixed(1)),textposition:'outside',cliponaxis:false,
+      marker:{color:rows.map((r,i)=>i===rows.length-1?'#12A58D':'#477DA5')},
+      customdata:rows.map(r=>[r.code,r.value]),
+      hovertemplate:'<b>%{y}</b><br>รหัสอาชีพ: %{customdata[0]}<br>สัดส่วน: %{x:.2f}%<br>จำนวนแรงงาน: %{customdata[1]:,.2f} พันคน<extra></extra>'};
+    Plotly.react('ranking-chart',[trace],baseLayout({height:450,margin:{l:255,r:85,t:30,b:60},
+      xaxis:{title:'สัดส่วนของผู้มีงานทำทั้งประเทศไทย (%)',rangemode:'tozero',gridcolor:'#edf1f5',ticksuffix:'%'},
+      yaxis:{title:'',automargin:true,tickfont:{size:11}},showlegend:false}),plotConfig);
   }
 
-  function initFingerprint() {
-    const occ = DATA.heatmap;
-    const z = occ.map(r => r.values);
-    const text = z.map(row => row.map(v => v === null ? '' : Number(v).toFixed(1)));
-    const trace = {
-      type: 'heatmap', x: DATA.heatmapCountries.map(countryLabel),
-      y: occ.map(r => `${r.code} · ${r.nameTh}`), z, text, texttemplate: '%{text}',
-      textfont: {family: baseFont, size: 10},
-      // ต่ำ = เหลืองอ่อน, สูง = แดงเข้ม ให้ตรงกับคำอธิบายใต้หัวข้อ
-      colorscale: [
-        [0.00, '#fff7bc'],
-        [0.25, '#fee391'],
-        [0.50, '#fec44f'],
-        [0.75, '#f16913'],
-        [1.00, '#99000d']
-      ],
-      reversescale: false,
-      zmin: 0,
-      zmax: 25.1,
-      colorbar: {title: 'สัดส่วน (%)', titleside: 'right', thickness: 14},
-      customdata: occ.map(r => DATA.heatmapCountries.map(() => r.code)),
-      hovertemplate: '<b>%{y}</b><br>ประเทศ: %{x}<br>รหัสอาชีพ: %{customdata}<br>สัดส่วนเฉลี่ย: %{z:.2f}%<extra></extra>'
-    };
-    const layout = baseLayout({
-      height: Math.max(850, occ.length * 38 + 200),
-      margin: {l: 300, r: 95, t: 28, b: 80},
-      xaxis: {title: 'ประเทศ', side: 'bottom', tickangle: 0},
-      yaxis: {title: '', autorange: 'reversed', automargin: true, tickfont: {size: 10}}
-    });
-    Plotly.react('fingerprint-chart', [trace], layout, plotConfig);
+  function initHeatmap() {
+    const records = DATA.thaiData.slice();
+    const occupations = [...new Map(records.map(r => [r.code,{code:r.code,nameTh:r.nameTh}])).values()]
+      .sort((a,b)=>a.code.localeCompare(b.code,'en',{numeric:true}));
+    const years = [...new Set(records.map(r=>r.year))].sort((a,b)=>a-b);
+    const byKey = new Map(records.map(r=>[`${r.code}| ${r.year}`,r.share]));
+    const z = occupations.map(o=>years.map(y=>byKey.has(`${o.code}| ${y}`)?byKey.get(`${o.code}| ${y}`):null));
+    const text = z.map(row=>row.map(v=>v===null?'':Number(v).toFixed(1)));
+    const trace = {type:'heatmap',x:years.map(String),y:occupations.map(o=>`${o.code} | ${o.nameTh}`),
+      z,text,texttemplate:'%{text}',textfont:{family:baseFont,size:10,color:'#252525'},
+      colorscale:[[0,'#fff7bc'],[0.25,'#fee391'],[0.5,'#fec44f'],[0.75,'#f16913'],[1,'#99000d']],
+      zmin:0,colorbar:{title:'สัดส่วน (%)',thickness:14},
+      hoverongaps:false,hovertemplate:'<b>%{y}</b><br>ปี: %{x}<br>สัดส่วน: %{z:.2f}%<extra></extra>'};
+    Plotly.react('heatmap-chart',[trace],baseLayout({height:Math.max(720,occupations.length*34+180),
+      margin:{l:310,r:80,t:35,b:80},xaxis:{title:'ปี',type:'category',tickangle:-45},
+      yaxis:{title:'กลุ่มอาชีพ',autorange:'reversed',automargin:true,tickfont:{size:10}}}),plotConfig);
   }
 
   function linearFit(rows) {
@@ -176,49 +152,38 @@
   }
 
   function initEvolution() {
-    evolutionOptions = [...new Map(DATA.commonData.filter(r => r.sex === 'Sex: Total').map(r => [r.nameEn, {code: r.code, nameEn: r.nameEn, nameTh: r.nameTh}])).values()]
-      .sort((a, b) => a.nameEn.localeCompare(b.nameEn, 'en'));
-    fillSelect($('evolution-occupation'), evolutionOptions.map(o => ({value: o.code, label: `${o.code} — ${o.nameTh}`})), evolutionOptions[0]?.code);
-    $('evolution-occupation').onchange = updateEvolution;
+    evolutionOptions = [...new Map(DATA.thaiData.map(r=>[r.code,{code:r.code,nameTh:r.nameTh}])).values()]
+      .sort((a,b)=>a.code.localeCompare(b.code,'en',{numeric:true}));
+    fillSelect($('evolution-occupation'),evolutionOptions.map(o=>({value:o.code,label:`${o.code} — ${o.nameTh}`})),evolutionOptions[0]?.code);
+    $('evolution-occupation').onchange=updateEvolution;
     updateEvolution();
   }
 
   function updateEvolution() {
-    const code = $('evolution-occupation').value;
-    const occupation = evolutionOptions.find(o => o.code === code);
-    if (!occupation) return;
-    const actualRecords = DATA.commonData.filter(r => r.code === code && r.sex === 'Sex: Total');
-    const start = DATA.meta.sharedYears[0];
-    const end = DATA.meta.sharedYears[DATA.meta.sharedYears.length - 1];
-    const forecastEnd = end + 3;
-    const traces = [];
-    DATA.meta.countries.slice().sort().forEach(country => {
-      const rows = actualRecords.filter(r => r.country === country).sort((a, b) => a.year - b.year);
-      if (!rows.length) return;
-      const color = countryColors[country] || '#888888';
-      const label = countryLabel(country);
-      traces.push({type: 'scatter', mode: 'lines+markers', x: rows.map(r => r.year), y: rows.map(r => r.share),
-        name: `${label} · ข้อมูลจริง`, legendgroup: country, line: {color, width: 2.5}, marker: {size: 6},
-        customdata: rows.map(r => r.value), hovertemplate: `<b>${label} · ${code} ${occupation.nameTh} (ข้อมูลจริง)</b><br>ปี: %{x}<br>สัดส่วนจริง: %{y:.2f}%<br>จำนวนแรงงาน: %{customdata:,.2f} พันคน<extra></extra>`});
-      const fit = linearFit(rows);
-      if (!fit) return;
-      const trendX = Array.from({length: end - start + 1}, (_, i) => start + i);
-      traces.push({type: 'scatter', mode: 'lines', x: trendX, y: trendX.map(fit.predict), name: `${label} · แนวโน้ม`, legendgroup: country,
-        line: {color, width: 2.3, dash: 'dash'}, hovertemplate: `<b>${label} · แนวโน้ม</b><br>ปี: %{x}<br>ค่าตามแนวโน้ม: %{y:.2f}%<extra></extra>`});
-      const forecastX = Array.from({length: forecastEnd - end + 1}, (_, i) => end + i);
-      traces.push({type: 'scatter', mode: 'lines', x: forecastX, y: forecastX.map(fit.predict), name: `${label} · คาดการณ์`, legendgroup: country,
-        line: {color, width: 3, dash: 'dot'}, hovertemplate: `<b>${label} · คาดการณ์เชิงเส้น</b><br>ปี: %{x}<br>สัดส่วนที่คาดการณ์: %{y:.2f}%<extra></extra>`});
-    });
-    const layout = baseLayout({
-      height: 650, margin: {l: 75, r: 30, t: 75, b: 70},
-      title: {text: `การเปลี่ยนแปลงของกลุ่มอาชีพ: ${code} — ${occupation.nameTh} (ข้อมูลจริง ${start}–${end})`, x: .5, xanchor: 'center', font: {size: 15}},
-      xaxis: {title: 'ปี', dtick: 1, range: [start, forecastEnd], gridcolor: '#edf1f5'},
-      yaxis: {title: 'สัดส่วนของผู้มีงานทำทั้งประเทศ (%)', rangemode: 'tozero', gridcolor: '#edf1f5'},
-      legend: {title: {text: 'ประเทศและประเภทเส้น'}, orientation: 'h', y: -0.23}, hovermode: 'x unified',
-      shapes: [{type: 'line', x0: end, x1: end, y0: 0, y1: 1, yref: 'paper', line: {color: '#8895a4', width: 1.4, dash: 'dash'}}],
-      annotations: [{x: end, y: 1, yref: 'paper', text: 'เริ่มช่วงคาดการณ์', showarrow: false, xanchor: 'right', yanchor: 'bottom', font: {size: 9, color: '#748397'}}]
-    });
-    Plotly.react('evolution-chart', traces, layout, plotConfig);
+    const code=$('evolution-occupation').value;
+    const occupation=evolutionOptions.find(o=>o.code===code);
+    if(!occupation)return;
+    const rows=DATA.thaiData.filter(r=>r.code===code).sort((a,b)=>a.year-b.year);
+    if(!rows.length)return;
+    const start=rows[0].year,end=rows[rows.length-1].year,forecastEnd=end+3;
+    const fit=linearFit(rows),traces=[{type:'scatter',mode:'lines+markers',x:rows.map(r=>r.year),y:rows.map(r=>r.share),
+      name:'ข้อมูลจริง',line:{color:'#2563EB',width:3},marker:{size:7},
+      hovertemplate:'<b>ข้อมูลจริง</b><br>ปี: %{x}<br>สัดส่วน: %{y:.2f}%<extra></extra>'}];
+    if(fit){
+      const trendX=Array.from({length:end-start+1},(_,i)=>start+i);
+      traces.push({type:'scatter',mode:'lines',x:trendX,y:trendX.map(fit.predict),name:'Linear Regression',
+        line:{color:'#F59E0B',width:2.5,dash:'dash'},hovertemplate:'<b>แนวโน้ม</b><br>ปี: %{x}<br>ค่า: %{y:.2f}%<extra></extra>'});
+      const forecastX=Array.from({length:4},(_,i)=>end+i);
+      traces.push({type:'scatter',mode:'lines',x:forecastX,y:forecastX.map(fit.predict),name:'ต่อแนวโน้ม 3 ปี',
+        line:{color:'#E11D48',width:3,dash:'dot'},hovertemplate:'<b>ต่อแนวโน้มเชิงเส้น</b><br>ปี: %{x}<br>ค่า: %{y:.2f}%<extra></extra>'});
+    }
+    const layout=baseLayout({height:580,margin:{l:75,r:30,t:65,b:70},
+      title:{text:`ประเทศไทย: ${code} — ${occupation.nameTh}`,x:.5,xanchor:'center'},
+      xaxis:{title:'ปี',dtick:1,range:[start,forecastEnd],gridcolor:'#edf1f5'},
+      yaxis:{title:'สัดส่วนของผู้มีงานทำทั้งประเทศ (%)',rangemode:'tozero',gridcolor:'#edf1f5'},
+      legend:{orientation:'h',y:-.22},hovermode:'x unified',
+      shapes:[{type:'line',x0:end,x1:end,y0:0,y1:1,yref:'paper',line:{color:'#8895a4',dash:'dash'}}]});
+    Plotly.react('evolution-chart',traces,layout,plotConfig);
   }
 
   function renderTable(tableId, rows, columns) {
@@ -314,20 +279,20 @@
       const response = await fetch(`${DATA_URL}?refresh=${Date.now()}`, {cache: 'no-store'});
       if (!response.ok) throw new Error(`โหลดไฟล์ข้อมูลไม่สำเร็จ (${response.status})`);
       const nextData = await response.json();
-      if (!nextData.meta || !Array.isArray(nextData.commonData) || !Array.isArray(nextData.thaiData)) {
+      if (!nextData.meta || !Array.isArray(nextData.thaiData)) {
         throw new Error('รูปแบบไฟล์ข้อมูลไม่ถูกต้อง');
       }
       DATA = nextData;
       window.CA_DATA = DATA;
       renderMetrics();
       initRanking();
-      initFingerprint();
+      initHeatmap();
       initEvolution();
       initGender();
-      initThailand();
+
       initBacktest();
       const updated = DATA.meta.fetchedAt ? ` · ดึงจาก ILOSTAT เมื่อ ${DATA.meta.fetchedAt}` : '';
-      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${DATA.meta.commonRows.toLocaleString('th-TH')} แถวสำหรับเปรียบเทียบ · ${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวสำหรับเจาะลึกประเทศไทย${updated}`;
+      status.textContent = `พร้อมสำรวจข้อมูลแล้ว · ${${DATA.meta.thaiRows.toLocaleString('th-TH')} แถวข้อมูลประเทศไทย${updated}`;
       status.classList.remove('error');
     } catch (error) {
       console.error(error);
