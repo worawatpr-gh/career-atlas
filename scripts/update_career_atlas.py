@@ -188,7 +188,7 @@ def main() -> None:
 
     # Match Notebook cell 21 exactly: keep only numeric 2-digit ISCO-08 groups.
     has_code = df_selected["classif1.label"].astype(str).str.contains(
-        r"level:\\s*\\d{2}\\s*-", regex=True, na=False
+        r"level:\s*\d{2}\s*-", regex=True, na=False
     )
     df_selected_codes = df_selected[has_code].copy()
     if df_selected_codes.empty:
